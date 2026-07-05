@@ -95,21 +95,21 @@
           <div class="flex items-start gap-3.5">
             <span class="bg-white/10 p-2 rounded-xl text-blue-400"><i class="fa-solid fa-bolt text-sm"></i></span>
             <div>
-              <h4 class="text-sm font-bold text-white">Instant Order Delivery</h4>
+              <h4 class="text-sm font-bold text-white font-sans">Instant Order Delivery</h4>
               <p class="text-xs text-slate-400 mt-0.5">আমাদের সার্ভিসগুলো অর্ডার করার সাথে সাথেই কাজ শুরু করে দেয়।</p>
             </div>
           </div>
           <div class="flex items-start gap-3.5">
             <span class="bg-white/10 p-2 rounded-xl text-blue-400"><i class="fa-solid fa-shield-halved text-sm"></i></span>
             <div>
-              <h4 class="text-sm font-bold text-white">100% Safe & Secure Payments</h4>
+              <h4 class="text-sm font-bold text-white font-sans">100% Safe & Secure Payments</h4>
               <p class="text-xs text-slate-400 mt-0.5">বিকাশ পার্সোনাল সেন্ড মানি সিস্টেমে নিরাপদ লেনদেনের সুবিধা।</p>
             </div>
           </div>
           <div class="flex items-start gap-3.5">
             <span class="bg-white/10 p-2 rounded-xl text-blue-400"><i class="fa-brands fa-telegram text-sm"></i></span>
             <div>
-              <h4 class="text-sm font-bold text-white">24/7 Dedicated Support</h4>
+              <h4 class="text-sm font-bold text-white font-sans">24/7 Dedicated Support</h4>
               <p class="text-xs text-slate-400 mt-0.5">টেলিগ্রাম সাপোর্টের মাধ্যমে যেকোনো প্রশ্নের দ্রুত সমাধান নিশ্চিত করি।</p>
             </div>
           </div>
@@ -412,7 +412,7 @@
               <div class="flex flex-col sm:flex-row gap-3">
                 <div class="relative flex-1">
                   <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400 pointer-events-none"><i class="fa-solid fa-magnifying-glass text-xs"></i></span>
-                  <input type="text" id="service-search" placeholder="Search for a service..." class="w-full bg-white dark:bg-[#0E1527]/90 border border-slate-200 dark:border-slate-800/80 rounded-2xl py-3 pl-10 pr-4 text-xs font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:placeholder-slate-500 backdrop-blur-md" onkeyup="handleSearch()">
+                  <input type="text" id="service-search" placeholder="Search for a service..." class="w-full bg-white dark:bg-[#0E1527]/90 border border-slate-200 dark:border-slate-800/80 rounded-2xl py-3 pl-10 pr-4 text-xs font-semibold focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:placeholder-slate-500 backdrop-blur-md" onkeyup="handleSearch()">
                 </div>
               </div>
 
@@ -578,7 +578,7 @@
           </div>
         </div>
 
-        <!-- VIEW: Add Funds (NO ACTION/APPROVE COLUMN AT ALL) -->
+        <!-- VIEW: Add Funds -->
         <div id="view-add-funds" class="hidden space-y-6">
           <div>
             <h2 class="text-xl md:text-2xl font-black tracking-tight flex items-center gap-2"><i class="fa-solid fa-wallet text-blue-500"></i> Payment Gateway</h2>
@@ -626,7 +626,7 @@
             </div>
 
             <!-- Right Side: Clean submission Form -->
-            <div class="lg:col-span-6 bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm space-y-4 backdrop-blur-md">
+            <div class="lg:col-span-6 bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm space-y-4 backdrop-blur-md font-sans">
               <h3 class="text-sm font-extrabold text-slate-800 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-2"><i class="fa-solid fa-receipt text-blue-500"></i> Submit Deposit Information</h3>
               
               <form id="deposit-submit-form" onsubmit="handleTransactionSubmit(event)" class="space-y-4">
@@ -681,7 +681,7 @@
             </div>
           </div>
 
-          <!-- Deposit history table (CLEAN: NO EXTRA ACTION COLUMNS) -->
+          <!-- Deposit history table (CLEANED) -->
           <div class="bg-white dark:bg-[#0E1527]/90 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm overflow-hidden mt-6 backdrop-blur-md">
             <div class="p-5 border-b border-slate-150 dark:border-slate-800/40 flex items-center gap-2">
               <span class="text-xs bg-slate-100 dark:bg-slate-900 text-slate-500 dark:text-slate-400 px-3 py-1.5 rounded-full font-bold uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-clock-rotate-left"></i> Recent Deposit History</span>
@@ -745,7 +745,7 @@
                     <p class="text-[10px] text-slate-400 mt-0.5">যেকোনো জরুরী প্রয়োজনে সরাসরি হোয়াটসঅ্যাপ মেসেজ দিন।</p>
                   </div>
                 </div>
-                <a href="https://wa.me/8801860909272" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-md font-sans">
+                <a href="https://wa.me/8801860909272" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-md">
                   Message <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
                 </a>
               </div>
@@ -797,7 +797,6 @@
               <span class="text-slate-400 font-semibold flex items-center gap-1">
                 <i class="fa-solid fa-gift text-blue-500"></i> Blue Badge Discount:
               </span>
-              <!-- Dynamically locked or unlocked -->
               <span id="modal-discount-tag" class="font-black text-rose-500">-৳0.00</span>
             </div>
             <div class="border-t border-slate-150 dark:border-slate-800/60 pt-1.5 flex justify-between items-center">
@@ -861,7 +860,7 @@
     // MOCK LEADERBOARD DATA (DYNAMIC)
     let leaderboard = [];
 
-    // RANDOM 100 USERS GENERATOR
+    // RANDOM 100 USERS GENERATOR WITH REALISTIC NAMES
     function generateLeaderboard() {
       const names = [
         'kaisarvai007', 'smm_boss_bd', 'rakib_reseller', 'shakib_99', 'tanvir_smm', 
@@ -979,7 +978,7 @@
         missionCard.className = "bg-gradient-to-r from-emerald-950/60 to-slate-950/60 border border-emerald-800/40 p-5 rounded-2xl backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-4";
         missionCard.querySelector('.fa-gift').parentElement.className = "bg-emerald-500/20 text-emerald-400 p-3 rounded-xl text-lg animate-bounce";
         missionCard.querySelector('h4').innerText = "🎉 Premium Verified Status Unlocked!";
-        missionCard.querySelector('p').innerText = "অভিনন্দন! আপনার ব্লু ব্যাজ সফলভাবে আনলক হয়েছে। প্রতি অর্ডারে ৳১০.০০ ফ্ল্যাট ডিসকাউন্ট অটো-অ্যাপ্লাইড হচ্ছে।";
+        missionCard.querySelector('p').innerText = "অভিনন্দন! আপনার ব্লু ব্যাজ সফলভাবে আনলক হয়েছে। প্রতি অর্ডারে ৳১০.০০ ফ্ল্যাট ডিসकाউন্ট অটো-অ্যাপ্লাইড হচ্ছে।";
       } else {
         hBadge.classList.add('hidden');
         wBadge.classList.add('hidden');
@@ -1093,7 +1092,6 @@
       googlePopup.classList.remove('hidden');
 
       setTimeout(() => {
-        // Set dynamic credentials of google user
         userDetails.displayName = "Kaisar Vai Support";
         userDetails.username = "kaisarvai007";
         userDetails.email = "kaisarvai007@gmail.com";
@@ -1190,7 +1188,7 @@
       `;
       container.prepend(ticketDiv);
 
-      showToast(`Support ticket #${ticketId} created successfully!`);
+      showToast('Support ticket #' + ticketId + ' created successfully!');
       document.getElementById('ticket-subject').value = '';
       document.getElementById('ticket-msg').value = '';
     }
@@ -1205,7 +1203,7 @@
       }
     }
 
-    // ADD FUNDS SUBMISSION WITH INTERACTIVE SIMULATED PENDING SYSTEM
+    // ADD FUNDS SUBMISSION WITH AUTOMATIC SIMULATED "PENDING ➔ APPROVED" FLOW (NO MANUAL BUTTONS)
     function handleTransactionSubmit(event) {
       event.preventDefault();
       
@@ -1234,7 +1232,7 @@
           <td class="py-4 px-4 font-mono font-bold text-slate-500">${txId}</td>
           <td class="py-4 px-4">Today</td>
           <td class="py-4 px-4">${senderNum}</td>
-          <td class="py-4 px-4 font-bold text-slate-700 dark:text-slate-300">৳${amount.toFixed(2)}</td>
+          <td class="py-4 px-4 font-bold text-slate-700 dark:text-slate-300">৳${amount.toFixed(2)} BDT</td>
           <td class="py-4 px-4"><span class="bg-amber-100 text-amber-600 px-2.5 py-1 rounded-full font-bold text-[10px]">Pending</span></td>
         `;
         logBody.prepend(newRow);
