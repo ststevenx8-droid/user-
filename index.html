@@ -26,12 +26,6 @@
   </script>
   <!-- FontAwesome for Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- Firebase Compatibility Libraries -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-
   <style>
     /* Premium Scrollbar */
     ::-webkit-scrollbar {
@@ -59,10 +53,11 @@
     }
   </style>
 </head>
-<body class="bg-[#F8FAFC] dark:bg-brand-deep text-slate-800 dark:text-slate-200 font-sans transition-colors duration-200 overflow-x-hidden relative font-medium">
+<body class="bg-[#F8FAFC] dark:bg-brand-deep text-slate-800 dark:text-slate-200 font-sans transition-colors duration-200 overflow-hidden relative font-medium">
 
-  <!-- ================= HIGH PERFORMANCE CANVAS PHYSICS & LIGHTING BG ================= -->
-  <canvas id="live-lighting-canvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+  <!-- Glow Mesh Background Effects -->
+  <div class="absolute top-0 right-0 w-[45rem] h-[45rem] bg-blue-600/5 dark:bg-blue-600/10 rounded-full blur-3xl pointer-events-none z-0"></div>
+  <div class="absolute bottom-0 left-0 w-[35rem] h-[35rem] bg-purple-500/5 dark:bg-purple-500/10 rounded-full blur-3xl pointer-events-none z-0"></div>
 
   <!-- ================= GOOGLE AUTHENTICATION LOADING POPUP ================= -->
   <div id="google-loading-popup" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden">
@@ -148,7 +143,7 @@
             <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Email Address</label>
             <div class="relative">
               <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500"><i class="fa-regular fa-envelope"></i></span>
-              <input type="email" id="login-email" required placeholder="name@domain.com" class="w-full bg-slate-900/60 border border-slate-800/80 rounded-xl py-3.5 pl-11 pr-4 text-xs font-semibold text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+              <input type="email" id="login-email" required value="johndoe@example.com" class="w-full bg-slate-900/60 border border-slate-800/80 rounded-xl py-3.5 pl-11 pr-4 text-xs font-semibold text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
             </div>
           </div>
 
@@ -156,7 +151,7 @@
             <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Password</label>
             <div class="relative">
               <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500"><i class="fa-solid fa-lock"></i></span>
-              <input type="password" id="login-password" required placeholder="Your Password" class="w-full bg-slate-900/60 border border-slate-800/80 rounded-xl py-3.5 pl-11 pr-11 text-xs font-semibold text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+              <input type="password" id="login-password" required value="12345678" class="w-full bg-slate-900/60 border border-slate-800/80 rounded-xl py-3.5 pl-11 pr-11 text-xs font-semibold text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
               <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-500 hover:text-white">
                 <i id="password-toggle-icon" class="fa-regular fa-eye"></i>
               </button>
@@ -167,7 +162,7 @@
             <label class="flex items-center gap-1.5 cursor-pointer">
               <input type="checkbox" checked class="rounded bg-slate-900 border-slate-800 text-blue-500 focus:ring-0"> Remember Me
             </label>
-            <a href="#" onclick="showToast('Password reset functionality integrated through email!')" class="hover:text-blue-500 transition-colors">Forgot Password?</a>
+            <a href="#" onclick="showToast('Password reset link sent!')" class="hover:text-blue-500 transition-colors">Forgot Password?</a>
           </div>
 
           <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-3.5 px-6 rounded-xl text-xs transition-all shadow-lg shadow-blue-500/10 flex items-center justify-center gap-2 mt-2">
@@ -188,7 +183,7 @@
         </button>
 
         <div class="text-center pt-2">
-          <p class="text-xs text-slate-500">Don't have an account? <a href="#" onclick="openRegisterModal()" class="text-blue-400 font-bold hover:underline">Register Now</a></p>
+          <p class="text-xs text-slate-500">Don't have an account? <a href="#" onclick="showToast('Registration is currently closed by Admin!')" class="text-blue-400 font-bold hover:underline">Request Access</a></p>
         </div>
       </div>
     </div>
@@ -224,7 +219,7 @@
           <span class="flex items-center gap-3">
             <i class="fa-regular fa-comments text-lg w-5 text-center"></i> Support Tickets
           </span>
-          <span class="bg-blue-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">New</span>
+          <span class="bg-blue-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">2</span>
         </button>
         <button id="nav-account" onclick="switchTab('account')" class="nav-btn w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
           <i class="fa-regular fa-user text-lg w-5 text-center"></i> My Account
@@ -233,13 +228,6 @@
           <i class="fa-solid fa-arrow-right-from-bracket text-lg w-5 text-center"></i> Log Out
         </button>
       </nav>
-
-      <!-- DEBUG MODE: ADMIN PANEL TOGGLE -->
-      <div class="px-4 py-2 border-t border-slate-800">
-        <button id="admin-mode-btn" onclick="toggleAdminView()" class="w-full bg-amber-600/20 border border-amber-500/30 text-amber-400 hover:bg-amber-600/30 font-bold py-2.5 px-4 rounded-xl text-xs transition-all flex items-center justify-center gap-2">
-          <i class="fa-solid fa-user-shield"></i> Open Admin Panel
-        </button>
-      </div>
 
       <!-- DUAL HELP SUPPORT BOX -->
       <div class="p-4 border-t border-slate-800">
@@ -291,7 +279,7 @@
             <img id="header-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80" alt="User Profile" class="w-9 h-9 rounded-full object-cover ring-2 ring-blue-500/20">
             <div class="hidden sm:block">
               <div class="flex items-center gap-1">
-                <h3 id="header-user-display" class="text-xs font-bold leading-none text-slate-800 dark:text-slate-200">Loading...</h3>
+                <h3 id="header-user-display" class="text-xs font-bold leading-none text-slate-800 dark:text-slate-200">John Doe</h3>
                 <!-- Starburst Verified Blue Badge -->
                 <span id="badge-header-container" class="hidden">
                   <svg class="w-3.5 h-3.5 text-blue-500 inline-block align-middle shrink-0 premium-badge-glow" viewBox="0 0 24 24" fill="currentColor">
@@ -299,7 +287,7 @@
                   </svg>
                 </span>
               </div>
-              <span id="header-username-display" class="text-[9px] text-slate-400 font-semibold block mt-0.5">@loading</span>
+              <span id="header-username-display" class="text-[9px] text-slate-400 font-semibold block mt-0.5">@johndoe</span>
             </div>
           </div>
         </div>
@@ -308,7 +296,7 @@
       <!-- MAIN WRAPPER -->
       <main class="p-6 max-w-[1400px] mx-auto w-full relative z-10">
 
-        <!-- VIEW: DASHBOARD -->
+        <!-- VIEW: DASHBOARD (ULTRA-WIDE 3-COLUMN GRID) -->
         <div id="view-dashboard" class="space-y-6">
           
           <!-- MISSION / PROGRESS CARD -->
@@ -334,7 +322,7 @@
           <!-- GREETINGS -->
           <div>
             <h2 class="text-xl md:text-2xl font-black tracking-tight flex items-center gap-1.5">
-              Welcome back, <span id="welcome-user-display" class="text-blue-500">Loading...</span>
+              Welcome back, <span id="welcome-user-display" class="text-blue-500">John Doe</span>
               <span id="badge-welcome-container" class="hidden">
                 <svg class="w-5 h-5 text-blue-500 inline-block align-middle premium-badge-glow" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M23 12l-2.44-2.78.34-3.68-3.61-.82-1.89-3.18L12 3 8.6 1.54 6.71 4.72l-3.61.81.34 3.68L1 12l2.44 2.78-.34 3.69 3.61.82 1.89 3.18L12 21l3.4 1.46 1.89-3.18 3.61-.82-.34-3.68L23 12zm-13 5l-4-4 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
@@ -390,36 +378,41 @@
           </div>
 
           <!-- Categories, Central Services & Right Leaderboard -->
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            <!-- Left Side Categories -->
+            <!-- Left Side Categories (Span 2) -->
             <div class="lg:col-span-2 bg-white dark:bg-[#0E1527]/90 rounded-2xl p-4 border border-slate-150 dark:border-slate-800/40 shadow-sm h-fit backdrop-blur-md">
               <h3 class="text-xs font-bold tracking-tight mb-3 flex items-center gap-1.5 text-slate-400 uppercase"><i class="fa-solid fa-grip-vertical"></i> Categories</h3>
               <div class="space-y-1" id="category-list">
                 <button onclick="filterCategory('All')" class="cat-btn w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-semibold bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400">
                   <span class="flex items-center gap-1.5"><i class="fa-solid fa-globe text-xs w-4"></i> All</span>
+                  <span class="text-[9px] opacity-70">5k</span>
                 </button>
                 <button onclick="filterCategory('Telegram')" class="cat-btn w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
                   <span class="flex items-center gap-1.5"><i class="fa-brands fa-telegram text-xs w-4 text-blue-500"></i> Telegram</span>
+                  <span class="text-[9px] text-slate-400">1.4k</span>
                 </button>
                 <button onclick="filterCategory('Instagram')" class="cat-btn w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
                   <span class="flex items-center gap-1.5"><i class="fa-brands fa-instagram text-xs w-4 text-pink-500"></i> Instagram</span>
+                  <span class="text-[9px] text-slate-400">985</span>
                 </button>
                 <button onclick="filterCategory('YouTube')" class="cat-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
                   <span class="flex items-center gap-2"><i class="fa-brands fa-youtube text-sm w-5 text-red-500"></i> YouTube</span>
+                  <span class="text-[9px] text-slate-400">756</span>
                 </button>
                 <button onclick="filterCategory('TikTok')" class="cat-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
                   <span class="flex items-center gap-2"><i class="fa-brands fa-tiktok text-sm w-5 text-[#25F4EE]"></i> TikTok</span>
+                  <span class="text-[9px] text-slate-400">850</span>
                 </button>
               </div>
             </div>
 
-            <!-- Central Services Table -->
+            <!-- Central Services Table (Span 7) -->
             <div class="lg:col-span-7 space-y-4">
               <div class="flex flex-col sm:flex-row gap-3">
                 <div class="relative flex-1">
                   <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400 pointer-events-none"><i class="fa-solid fa-magnifying-glass text-xs"></i></span>
-                  <input type="text" id="service-search" placeholder="Search for a service..." class="w-full bg-white dark:bg-[#0E1527]/90 border border-slate-200 dark:border-slate-800/80 rounded-2xl py-3 pl-10 pr-4 text-xs font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:placeholder-slate-500 backdrop-blur-md" onkeyup="handleSearch()">
+                  <input type="text" id="service-search" placeholder="Search for a service..." class="w-full bg-white dark:bg-[#0E1527]/90 border border-slate-200 dark:border-slate-800/80 rounded-2xl py-3 pl-10 pr-4 text-xs font-semibold focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:placeholder-slate-500 backdrop-blur-md" onkeyup="handleSearch()">
                 </div>
               </div>
 
@@ -455,7 +448,7 @@
           </div>
         </div>
 
-        <!-- VIEW: ACCOUNT -->
+        <!-- VIEW: ACCOUNT (FIXED PROFILE PIC HEIGHT CLASS TYPO) -->
         <div id="view-account" class="hidden space-y-6">
           <div>
             <h2 class="text-xl md:text-2xl font-black tracking-tight"><i class="fa-regular fa-user text-blue-500"></i> Account Center</h2>
@@ -463,9 +456,11 @@
           </div>
           
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Account Update Card & Upload Avatar -->
             <div class="lg:col-span-8 bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm space-y-6 backdrop-blur-md">
               <div class="flex flex-col sm:flex-row items-center gap-5 border-b border-slate-100 dark:border-slate-800/50 pb-5">
                 <div class="relative group">
+                  <!-- Fixed Profile Image Height Class from h-120 to h-20 -->
                   <img id="acc-avatar-img" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80" alt="User Profile" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover ring-4 ring-blue-500/20">
                   <label for="avatar-upload" class="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center text-white text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-all cursor-pointer">
                     Change <i class="fa-solid fa-camera ml-1"></i>
@@ -474,14 +469,15 @@
                 </div>
                 <div>
                   <div class="flex items-center gap-1.5">
-                    <h3 id="acc-user-header" class="text-base font-extrabold text-slate-800 dark:text-white leading-none">Loading...</h3>
+                    <h3 id="acc-user-header" class="text-base font-extrabold text-slate-800 dark:text-white leading-none">John Doe</h3>
+                    <!-- Starburst Verified Blue Badge -->
                     <span id="badge-account-container" class="hidden">
                       <svg class="w-4 h-4 text-blue-500 fill-current inline-block align-middle shrink-0 premium-badge-glow" viewBox="0 0 24 24">
                         <path d="M23 12l-2.44-2.78.34-3.68-3.61-.82-1.89-3.18L12 3 8.6 1.54 6.71 4.72l-3.61.81.34 3.68L1 12l2.44 2.78-.34 3.69 3.61.82 1.89 3.18L12 21l3.4 1.46 1.89-3.18 3.61-.82-.34-3.68L23 12zm-13 5l-4-4 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                       </svg>
                     </span>
                   </div>
-                  <span id="acc-username-header" class="text-xs text-slate-400 font-semibold block mt-1">@username</span>
+                  <span id="acc-username-header" class="text-xs text-slate-400 font-semibold block mt-1">@johndoe</span>
                   <div class="flex gap-2 mt-2.5">
                     <span class="bg-emerald-50 dark:bg-emerald-950/25 text-emerald-500 text-[10px] font-black px-2 py-0.5 rounded-md border border-emerald-100/30">Verified User</span>
                     <span class="bg-blue-50 dark:bg-blue-950/25 text-blue-500 text-[10px] font-black px-2 py-0.5 rounded-md border border-blue-100/30">Reseller Level 1</span>
@@ -493,20 +489,20 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Display Name</label>
-                    <input type="text" id="acc-name" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-semibold focus:ring-2 focus:ring-blue-500 outline-none">
+                    <input type="text" id="acc-name" required value="John Doe" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-semibold focus:ring-2 focus:ring-blue-500 outline-none">
                   </div>
                   <div>
                     <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Username (@)</label>
                     <div class="relative">
                       <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500 font-bold">@</span>
-                      <input type="text" id="acc-username-field" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pl-8 pr-4 text-xs font-semibold focus:ring-2 focus:ring-blue-500 outline-none">
+                      <input type="text" id="acc-username-field" required value="johndoe" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pl-8 pr-4 text-xs font-semibold focus:ring-2 focus:ring-blue-500 outline-none">
                     </div>
                   </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Email Address</label>
-                    <input type="email" id="acc-email" readonly class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-semibold outline-none cursor-not-allowed">
+                    <input type="email" id="acc-email" required value="johndoe@example.com" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-semibold focus:ring-2 focus:ring-blue-500 outline-none">
                   </div>
                   <div>
                     <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Timezone</label>
@@ -524,6 +520,7 @@
 
             <!-- API Management & Security Status -->
             <div class="lg:col-span-4 space-y-6">
+              <!-- Developer API -->
               <div class="bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm space-y-4 backdrop-blur-md">
                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
                   <span>Developer API Key</span>
@@ -536,15 +533,16 @@
                 <button onclick="regenerateApiKey()" class="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-800 dark:text-white font-bold py-2.5 px-4 rounded-xl text-xs transition-all"><i class="fa-solid fa-arrows-rotate mr-1"></i> Generate New Key</button>
               </div>
 
+              <!-- Real-time Security Activity Card -->
               <div class="bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm space-y-4 backdrop-blur-md">
                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-emerald-500"></i> Recent Activity Logs</h3>
                 <div class="space-y-3 text-[11px]">
                   <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800/50 pb-2">
                     <div>
-                      <h4 class="font-bold">Realtime Firebase Synced</h4>
-                      <span class="text-[9px] text-slate-400">Authenticated Safe Session</span>
+                      <h4 class="font-bold">Logged In Successfully</h4>
+                      <span class="text-[9px] text-slate-400">IP: 103.230.104.12 &bull; Dhaka</span>
                     </div>
-                    <span class="text-emerald-500 font-black">Online</span>
+                    <span class="text-emerald-500 font-black">Just Now</span>
                   </div>
                 </div>
               </div>
@@ -588,9 +586,11 @@
             <p class="text-xs text-slate-400 mt-1">পেমেন্ট করার পর ট্রানজেকশন তথ্য নিচে সাবমিট করুন। পেমেন্ট ভেরিফাই করে ব্যালেন্স অ্যাড করা হবে।</p>
           </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 font-sans">
-            <!-- Left Side: Invoice details -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Left Side: Invoice Style bKash Checkout details -->
             <div class="lg:col-span-6 bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm space-y-5 backdrop-blur-md font-sans">
+              
+              <!-- Payment Box Header with Official bKash SVG Logo -->
               <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
                 <div class="flex items-center gap-3">
                   <img src="https://www.logo.wine/a/logo/BKash/BKash-Logo.wine.svg" class="h-10 w-auto object-contain dark:brightness-110 shrink-0" alt="bKash Official Logo">
@@ -601,8 +601,8 @@
                 </div>
               </div>
 
-              <!-- copyable bKash card -->
-              <div class="bg-gradient-to-r from-[#E2125D] to-[#F12B7C] p-6 rounded-2xl text-white relative overflow-hidden shadow-lg shadow-pink-500/15">
+              <!-- Premium copyable bKash card -->
+              <div class="bg-gradient-to-r from-[#E2125D] to-[#F12B7C] p-6 rounded-2xl text-white relative overflow-hidden shadow-lg shadow-pink-500/15 font-sans">
                 <div class="absolute -right-8 -bottom-8 w-24 h-24 bg-white/5 rounded-full blur-xl"></div>
                 <div class="space-y-4">
                   <div class="flex justify-between items-center text-[10px] uppercase font-bold tracking-widest text-pink-100">
@@ -617,6 +617,7 @@
                 </div>
               </div>
 
+              <!-- Alerts and Warnings -->
               <div class="space-y-3 pt-2 text-[11px]">
                 <div class="flex items-start gap-2 text-rose-500 bg-rose-50 dark:bg-rose-950/25 p-3 rounded-xl border border-rose-100/50">
                   <i class="fa-solid fa-triangle-exclamation mt-0.5 shrink-0"></i>
@@ -625,7 +626,7 @@
               </div>
             </div>
 
-            <!-- Right Side: Submission Form -->
+            <!-- Right Side: Clean submission Form -->
             <div class="lg:col-span-6 bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm space-y-4 backdrop-blur-md">
               <h3 class="text-sm font-extrabold text-slate-800 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-2"><i class="fa-solid fa-receipt text-blue-500"></i> Submit Deposit Information</h3>
               
@@ -669,6 +670,7 @@
                 </button>
               </form>
 
+              <!-- Live support help notes with WhatsApp & Telegram direct links -->
               <div class="bg-blue-50/50 dark:bg-blue-950/20 p-4 rounded-2xl border border-blue-100/40 space-y-3">
                 <span class="text-xs font-extrabold text-blue-600 dark:text-blue-400 block"><i class="fa-solid fa-circle-question"></i> ইনস্ট্যান্ট ফান্ড অ্যাড সাপোর্ট:</span>
                 <p class="text-[10px] text-slate-500 leading-relaxed">পেমেন্ট ফর্ম সাবমিট করার পর দ্রুত ব্যালেন্স যুক্ত করতে ট্রানজেকশনের স্ক্রিনশট সহ আমাদের টেলিগ্রাম বা হোয়াটসঅ্যাপে যোগাযোগ করুন।</p>
@@ -722,13 +724,18 @@
                   <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Description</label>
                   <textarea id="ticket-msg" required rows="4" placeholder="Briefly describe your request" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 text-xs focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
                 </div>
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-2xl text-xs transition-all shadow-md">Create Ticket</button>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-2xl text-xs transition-all shadow-md font-sans">Create Ticket</button>
               </form>
             </div>
             
             <div class="lg:col-span-7 bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm overflow-hidden backdrop-blur-md space-y-6">
               <div class="space-y-3" id="tickets-history-container">
-                <!-- Syncs from Realtime DB -->
+                <div class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-slate-150 dark:border-slate-800 flex justify-between items-center">
+                  <div>
+                    <h4 class="text-xs font-bold">Payment didn't load in 10 mins</h4>
+                    <span class="text-[10px] text-slate-400">Status: <span class="text-blue-500 font-bold">Answered</span> | Ticket ID: #10023</span>
+                  </div>
+                </div>
               </div>
 
               <!-- Help desk with Direct WhatsApp Support -->
@@ -743,60 +750,6 @@
                 <a href="https://wa.me/8801860909272" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-md">
                   Message <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
                 </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- VIEW: ADMIN DASHBOARD (Pinhole admin system to approve transactions/complete orders) -->
-        <div id="view-admin" class="hidden space-y-6">
-          <div>
-            <h2 class="text-xl md:text-2xl font-black tracking-tight flex items-center gap-2 text-amber-500"><i class="fa-solid fa-user-shield"></i> Administration Console</h2>
-            <p class="text-xs text-slate-400 mt-1">Verify live transactions, manage client orders, and update statuses.</p>
-          </div>
-
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Deposit Verification Desk -->
-            <div class="bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm space-y-4 backdrop-blur-md">
-              <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-circle-dollar-to-slot text-emerald-500"></i> Deposit Verification Desk</h3>
-              <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-xs">
-                  <thead>
-                    <tr class="bg-slate-50 dark:bg-slate-900/40 text-slate-400 uppercase font-bold border-b border-slate-150 dark:border-slate-800/40">
-                      <th class="py-3 px-4">User</th>
-                      <th class="py-3 px-4">TxID</th>
-                      <th class="py-3 px-4">Amount</th>
-                      <th class="py-3 px-4 text-center">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody id="admin-deposits-table-body" class="divide-y divide-slate-100 dark:divide-slate-800/40">
-                    <tr>
-                      <td colspan="4" class="py-6 text-center text-slate-400 font-medium">No pending deposit verification request.</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <!-- Client Order Dispatch -->
-            <div class="bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm space-y-4 backdrop-blur-md">
-              <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-truck-ramp-box text-blue-500"></i> Client Order Dispatch</h3>
-              <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-xs">
-                  <thead>
-                    <tr class="bg-slate-50 dark:bg-slate-900/40 text-slate-400 uppercase font-bold border-b border-slate-150 dark:border-slate-800/40">
-                      <th class="py-3 px-4">User</th>
-                      <th class="py-3 px-4">Service</th>
-                      <th class="py-3 px-4">Charge</th>
-                      <th class="py-3 px-4 text-center">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody id="admin-orders-table-body" class="divide-y divide-slate-100 dark:divide-slate-800/40">
-                    <tr>
-                      <td colspan="4" class="py-6 text-center text-slate-400 font-medium">No pending client order requests.</td>
-                    </tr>
-                  </tbody>
-                </table>
               </div>
             </div>
           </div>
@@ -832,19 +785,24 @@
             <select id="modal-service" onchange="updateServiceDetails()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-medium outline-none focus:ring-2 focus:ring-blue-500"></select>
           </div>
           
-          <!-- Cost Breakdown with Gamified verified badge discount -->
-          <div class="bg-blue-50/50 dark:bg-blue-950/20 p-4 rounded-2xl text-xs space-y-1.5 border border-blue-100/40">
+          <!-- Premium Cost Breakdown with Gamified verified badge discount -->
+          <div class="bg-blue-50/50 dark:bg-blue-950/20 p-4 rounded-2xl text-xs space-y-1.5 border border-blue-100/40 font-sans">
             <div class="flex justify-between">
-              <span class="text-slate-400 font-bold">Subtotal Cost:</span>
+              <span class="text-slate-400 font-semibold">Rate per 1000:</span>
               <span id="modal-rate" class="font-extrabold text-slate-700 dark:text-slate-300">৳0.00</span>
             </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400 font-semibold">Subtotal:</span>
+              <span id="modal-subtotal" class="font-extrabold text-slate-700 dark:text-slate-300">৳0.00</span>
+            </div>
             <div class="flex justify-between items-center" id="discount-modal-row">
-              <span class="text-slate-400 font-bold flex items-center gap-1">
+              <span class="text-slate-400 font-semibold flex items-center gap-1">
                 <i class="fa-solid fa-gift text-blue-500"></i> Blue Badge Discount:
               </span>
+              <!-- Dynamically locked or unlocked -->
               <span id="modal-discount-tag" class="font-black text-rose-500">-৳0.00</span>
             </div>
-            <div class="border-t border-slate-100 dark:border-slate-800/60 pt-1.5 flex justify-between">
+            <div class="border-t border-slate-150 dark:border-slate-800/60 pt-1.5 flex justify-between items-center">
               <span class="text-slate-500 font-extrabold">Final Charge:</span>
               <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-blue-500 font-black text-xs">৳</span>
@@ -863,36 +821,7 @@
               <input type="number" id="modal-quantity" required min="10" placeholder="1000" oninput="calculateCost()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-semibold focus:ring-2 focus:ring-blue-500 outline-none">
             </div>
           </div>
-          <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-2xl text-xs transition-all shadow-md mt-2 flex items-center justify-center gap-2"><i class="fa-regular fa-paper-plane"></i> Place Order</button>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- REGISTRATION ACCESS MODAL -->
-  <div id="register-modal" class="fixed inset-0 z-50 overflow-y-auto hidden">
-    <div class="flex items-center justify-center min-h-screen p-4 text-center sm:block">
-      <div onclick="closeRegisterModal()" class="fixed inset-0 transition-opacity bg-slate-950/70"></div>
-      <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
-      <div class="inline-block w-full max-w-md overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-[#0E1527] rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800/55 my-8">
-        <div class="p-6 border-b border-slate-100 dark:border-slate-800/40 flex items-center justify-between">
-          <h3 class="text-base font-extrabold flex items-center gap-2"><i class="fa-solid fa-user-plus text-blue-500"></i> Register New Account</h3>
-          <button onclick="closeRegisterModal()" class="text-slate-400 hover:text-slate-600 focus:outline-none"><i class="fa-solid fa-xmark text-lg"></i></button>
-        </div>
-        <form onsubmit="handleRegisterSubmit(event)" class="p-6 space-y-4">
-          <div>
-            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Display Name</label>
-            <input type="text" id="reg-name" required placeholder="Ex: Kaisar Ahmed" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-medium focus:ring-2 focus:ring-blue-500 outline-none">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Email Address</label>
-            <input type="email" id="reg-email" required placeholder="yourname@domain.com" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-medium focus:ring-2 focus:ring-blue-500 outline-none">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Password</label>
-            <input type="password" id="reg-password" required placeholder="Choose a Secure Password" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-medium focus:ring-2 focus:ring-blue-500 outline-none">
-          </div>
-          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-2xl text-xs transition-all shadow-md mt-2 flex items-center justify-center gap-2">Sign Up Now <i class="fa-solid fa-user-plus"></i></button>
+          <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-2xl text-xs transition-all shadow-md mt-2 flex items-center justify-center gap-2"><i class="fa-regular fa-paper-plane"></i> Place Order Successfully</button>
         </form>
       </div>
     </div>
@@ -903,163 +832,6 @@
 
   <!-- JAVASCRIPT LOGIC -->
   <script>
-    // Firebase Configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyBchtm5yS1ZuW1b-5DWAIncTysOv09bYX0",
-      authDomain: "stevenx-4ef00.firebaseapp.com",
-      databaseURL: "https://stevenx-4ef00-default-rtdb.firebaseio.com",
-      projectId: "stevenx-4ef00",
-      storageBucket: "stevenx-4ef00.firebasestorage.app",
-      messagingSenderId: "882062097165"
-    };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const database = firebase.database();
-
-    // ================= DYNAMIC INTERACTIVE PHYSICS CANVAS BACKGROUND =================
-    const canvas = document.getElementById('live-lighting-canvas');
-    const ctx = canvas.getContext('2d');
-    let width, height;
-
-    function resizeCanvas() {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      canvas.style.width = width + 'px';
-      canvas.style.height = height + 'px';
-      ctx.scale(dpr, dpr);
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    // Ambient Lighting positions
-    const lights = [
-      { x: Math.random() * width, y: Math.random() * height, tx: Math.random() * width, ty: Math.random() * height, r: 350, speed: 0.002, colorDark: 'rgba(59, 130, 246, 0.08)', colorLight: 'rgba(59, 130, 246, 0.03)' },
-      { x: Math.random() * width, y: Math.random() * height, tx: Math.random() * width, ty: Math.random() * height, r: 450, speed: 0.0015, colorDark: 'rgba(99, 102, 241, 0.06)', colorLight: 'rgba(99, 102, 241, 0.02)' },
-      { x: Math.random() * width, y: Math.random() * height, tx: Math.random() * width, ty: Math.random() * height, r: 300, speed: 0.003, colorDark: 'rgba(139, 92, 246, 0.05)', colorLight: 'rgba(139, 92, 246, 0.01)' }
-    ];
-
-    // Mouse Tracking state
-    let mouse = { x: null, y: null, radius: 120 };
-    window.addEventListener('mousemove', (e) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    });
-    window.addEventListener('mouseleave', () => {
-      mouse.x = null;
-      mouse.y = null;
-    });
-
-    // Falling physics ball simulation
-    const balls = [];
-    const maxBalls = 20;
-    const gravity = 0.05;
-    const bounce = -0.6;
-    const friction = 0.98;
-
-    for (let i = 0; i < maxBalls; i++) {
-      balls.push({
-        x: Math.random() * width,
-        y: Math.random() * -height, 
-        r: 8 + Math.random() * 12,
-        vx: (Math.random() - 0.5) * 2,
-        vy: Math.random() * 2
-      });
-    }
-
-    function animateBackground() {
-      ctx.clearRect(0, 0, width, height);
-      const isDark = document.documentElement.classList.contains('dark');
-
-      // 1. Draw Lighting Spotlight system
-      lights.forEach(l => {
-        l.x += (l.tx - l.x) * l.speed;
-        l.y += (l.ty - l.y) * l.speed;
-
-        if (Math.abs(l.tx - l.x) < 10 && Math.abs(l.ty - l.y) < 10) {
-          l.tx = Math.random() * width;
-          l.ty = Math.random() * height;
-        }
-
-        const gradient = ctx.createRadialGradient(l.x, l.y, 0, l.x, l.y, l.r);
-        const targetColor = isDark ? l.colorDark : l.colorLight;
-        gradient.addColorStop(0, targetColor);
-        gradient.addColorStop(1, 'rgba(0,0,0,0)');
-        
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(l.x, l.y, l.r, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      // 2. Draw falling physical balls
-      balls.forEach(b => {
-        b.vy += gravity;
-        b.x += b.vx;
-        b.y += b.vy;
-
-        // Interaction with Cursor: Push particles away
-        if (mouse.x !== null && mouse.y !== null) {
-          const dx = b.x - mouse.x;
-          const dy = b.y - mouse.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < mouse.radius) {
-            const force = (mouse.radius - dist) / mouse.radius;
-            const angle = Math.atan2(dy, dx);
-            b.vx += Math.cos(angle) * force * 1.2;
-            b.vy += Math.sin(angle) * force * 1.2;
-          }
-        }
-
-        // Collision: Left / Right bounds
-        if (b.x - b.r < 0) {
-          b.x = b.r;
-          b.vx = -b.vx * 0.8;
-        } else if (b.x + b.r > width) {
-          b.x = width - b.r;
-          b.vx = -b.vx * 0.8;
-        }
-
-        // Collision: Floor bounding bounce
-        if (b.y + b.r > height) {
-          b.y = height - b.r;
-          b.vy = b.vy * bounce;
-          b.vx *= friction;
-
-          // If kinetic force is exhausted, respawn back at the top ceiling
-          if (Math.abs(b.vy) < 0.2) {
-            b.y = Math.random() * -100;
-            b.x = Math.random() * width;
-            b.vy = Math.random() * 1.5;
-            b.vx = (Math.random() - 0.5) * 2;
-          }
-        }
-
-        const ballGrad = ctx.createRadialGradient(b.x, b.y, b.r * 0.1, b.x, b.y, b.r);
-        if (isDark) {
-          ballGrad.addColorStop(0, 'rgba(255, 255, 255, 0.7)');
-          ballGrad.addColorStop(0.3, 'rgba(59, 130, 246, 0.4)');
-          ballGrad.addColorStop(1, 'rgba(99, 102, 241, 0)');
-        } else {
-          ballGrad.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
-          ballGrad.addColorStop(0.3, 'rgba(147, 197, 253, 0.3)');
-          ballGrad.addColorStop(1, 'rgba(165, 180, 252, 0)');
-        }
-
-        ctx.fillStyle = ballGrad;
-        ctx.beginPath();
-        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      requestAnimationFrame(animateBackground);
-    }
-    animateBackground();
-
     // Services Database
     const services = [
       { id: 30447, category: 'Telegram', name: 'Auto Telegram Post View | instant | Non Drop | Future 200 Post', icon: 'fa-telegram text-blue-400', rate: 114.41, min: 100, max: 50000 },
@@ -1073,59 +845,209 @@
       { id: 4532, category: 'TikTok', name: 'TikTok Video Likes | Stable & Super Fast', icon: 'fa-tiktok text-[#25F4EE]', rate: 195.00, min: 25, max: 200000 }
     ];
 
-    // Client memory states
-    let localUserState = {
-      uid: null,
+    // INTERNAL DYNAMIC STATE (ALL BDT)
+    let walletState = {
       balance: 0.00,
       spent: 0.00,
       orders: 0,
-      pending: 0,
-      role: 'user',
-      displayName: "Loading...",
-      username: "loading",
+      pending: 0
+    };
+
+    let userDetails = {
+      displayName: "John Doe",
+      username: "johndoe",
+      email: "johndoe@example.com",
       avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80"
     };
 
-    let selectedFilterCategory = 'All';
-    let isAdminActive = false;
+    // MOCK LEADERBOARD DATA (DYNAMIC)
+    let leaderboard = [];
 
-    // Toast Generator
-    function showToast(message, status = 'info') {
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = `p-4 rounded-2xl shadow-lg text-xs font-bold transition-all transform translate-y-2 opacity-0 duration-300 flex items-center gap-2 ${
-        status === 'success' ? 'bg-emerald-600 text-white font-sans' : 
-        status === 'error' ? 'bg-rose-600 text-white font-sans' : 'bg-[#0E1527] text-slate-200 border border-slate-800 font-sans'
-      }`;
-      toast.innerHTML = `<i class="fa-solid ${status === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'}"></i> ${message}`;
-      container.appendChild(toast);
-      
-      setTimeout(() => {
-        toast.classList.remove('translate-y-2', 'opacity-0');
-      }, 50);
-      
-      setTimeout(() => {
-        toast.classList.add('translate-y-2', 'opacity-0');
-        setTimeout(() => toast.remove(), 400);
-      }, 4000);
-    }
+    // RANDOM 100 USERS GENERATOR WITH REALISTIC BANGLADESHI/ENGLISH NAMES
+    function generateLeaderboard() {
+      const names = [
+        'kaisarvai007', 'smm_boss_bd', 'rakib_reseller', 'shakib_99', 'tanvir_smm', 
+        'bd_provider', 'arif_smm', 'provider_king', 'reseller_dhaka', 'shuvo_smm', 
+        'mim_reseller', 'nasim_bd', 'smm_expert_ctg', 'siam_smm', 'bd_reseller_hub', 
+        'reseller_king', 'faisal_ctg', 'top_smm_bd', 'babu_reseller', 'emran_smm', 
+        'smm_provider_bd', 'joy_smm', 'hasan_reseller', 'bd_boost', 'smm_palace', 
+        'social_king', 'resell_guru', 'reseller_zone', 'bd_smmpanel', 'top_provider_bd'
+      ];
 
-    // Toggle Mobile Sidebar
-    function toggleMobileSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('-translate-x-full');
-    }
+      let list = [];
 
-    // SPA View Routing
-    const routingTabs = ['dashboard', 'orders', 'add-funds', 'tickets', 'account', 'admin'];
-    function switchTab(viewId) {
-      routingTabs.forEach(tab => {
-        const viewEl = document.getElementById(`view-${tab}`);
-        if(viewEl) viewEl.classList.add('hidden');
+      // Generate 99 random users
+      for (let i = 0; i < 99; i++) {
+        const randomName = names[i % names.length] + '_' + Math.floor(10 + Math.random() * 900);
+        const spent = 150 + Math.random() * 45000;
+        const avatarNum = Math.floor(1 + Math.random() * 70);
+
+        list.push({
+          username: '@' + randomName,
+          spent: spent,
+          avatar: `https://i.pravatar.cc/100?img=${avatarNum}`,
+          isMe: false
+        });
+      }
+
+      // Add Me to the list
+      list.push({
+        username: '@' + userDetails.username,
+        spent: walletState.spent,
+        avatar: userDetails.avatar,
+        isMe: true
       });
 
-      const activeView = document.getElementById(`view-${viewId}`);
-      if(activeView) activeView.classList.remove('hidden');
+      leaderboard = list;
+    }
+
+    // RENDER TOP 20 LEADERBOARD
+    function renderLeaderboard() {
+      const me = leaderboard.find(u => u.isMe);
+      if(me) {
+        me.spent = walletState.spent;
+        me.username = `@${userDetails.username}`;
+        me.avatar = userDetails.avatar;
+      }
+
+      leaderboard.sort((a, b) => b.spent - a.spent);
+
+      const container = document.getElementById('leaderboard-container');
+      container.innerHTML = '';
+
+      // Slice to top 20 list (As requested)
+      const top20 = leaderboard.slice(0, 20);
+
+      top20.forEach((user, index) => {
+        const row = document.createElement('div');
+        row.className = `flex items-center justify-between p-2 rounded-xl border transition-all ${user.isMe ? 'bg-blue-500/10 border-blue-500/30 ring-2 ring-blue-500/20' : 'bg-slate-50/50 dark:bg-slate-900/40 border-slate-100 dark:border-slate-800/40'}`;
+        
+        let rankColor = 'text-slate-400';
+        if(index === 0) rankColor = 'text-yellow-500';
+        if(index === 1) rankColor = 'text-slate-300';
+        if(index === 2) rankColor = 'text-amber-600';
+
+        row.innerHTML = `
+          <div class="flex items-center gap-2 overflow-hidden">
+            <span class="text-xs font-black w-4 text-center ${rankColor}">#${index + 1}</span>
+            <img src="${user.avatar}" class="w-7 h-7 rounded-full object-cover ring-1 ring-blue-500/10">
+            <span class="text-[11px] font-bold truncate text-slate-700 dark:text-slate-300">${user.username}</span>
+          </div>
+          <span class="text-[10px] font-black shrink-0 text-slate-800 dark:text-slate-200">৳${user.spent.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    // SIMULATED BACKGROUND ACTIVITY (Other SMM resellers ordering in real-time)
+    setInterval(() => {
+      if (leaderboard.length === 0) return;
+
+      const numActive = Math.floor(1 + Math.random() * 3);
+      for(let k = 0; k < numActive; k++) {
+        const randIndex = Math.floor(Math.random() * leaderboard.length);
+        const user = leaderboard[randIndex];
+        
+        if(user && !user.isMe) {
+          const incrementalSpent = 50 + Math.random() * 950;
+          user.spent += incrementalSpent;
+        }
+      }
+
+      renderLeaderboard();
+    }, 8500);
+
+    // CHECK BADGE UNLOCK STATUS (SPEND >= 100 BDT)
+    function checkBadgeUnlockStatus() {
+      const isUnlocked = walletState.spent >= 100.00;
+
+      const progressText = document.getElementById('mission-progress-text');
+      const progressBar = document.getElementById('mission-progress-bar');
+      const missionPercentage = document.getElementById('mission-percentage');
+      const missionCard = document.getElementById('mission-warning-card');
+
+      progressText.innerText = `৳${walletState.spent.toFixed(2)}`;
+      
+      const percentage = Math.min(100, (walletState.spent / 100) * 100);
+      progressBar.style.width = `${percentage}%`;
+      missionPercentage.innerText = `${Math.floor(percentage)}%`;
+
+      const hBadge = document.getElementById('badge-header-container');
+      const wBadge = document.getElementById('badge-welcome-container');
+      const aBadge = document.getElementById('badge-account-container');
+
+      if (isUnlocked) {
+        hBadge.classList.remove('hidden');
+        wBadge.classList.remove('hidden');
+        aBadge.classList.remove('hidden');
+
+        missionCard.className = "bg-gradient-to-r from-emerald-950/60 to-slate-950/60 border border-emerald-800/40 p-5 rounded-2xl backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-4";
+        missionCard.querySelector('.fa-gift').parentElement.className = "bg-emerald-500/20 text-emerald-400 p-3 rounded-xl text-lg animate-bounce";
+        missionCard.querySelector('h4').innerText = "🎉 Premium Verified Status Unlocked!";
+        missionCard.querySelector('p').innerText = "অভিনন্দন! আপনার ব্লু ব্যাজ সফলভাবে আনলক হয়েছে। প্রতি অর্ডারে ৳১০.০০ ফ্ল্যাট ডিসকাউন্ট অটো-অ্যাপ্লাইড হচ্ছে।";
+      } else {
+        hBadge.classList.add('hidden');
+        wBadge.classList.add('hidden');
+        aBadge.classList.add('hidden');
+      }
+    }
+
+    // RENDER STATS UI IN BDT
+    function updateStatsUI() {
+      document.getElementById('stat-balance').innerText = `৳${walletState.balance.toFixed(2)}`;
+      document.getElementById('stat-spent').innerText = `৳${walletState.spent.toFixed(2)}`;
+      document.getElementById('stat-orders').innerText = walletState.orders.toString();
+      document.getElementById('stat-pending').innerText = walletState.pending.toString();
+      
+      checkBadgeUnlockStatus();
+      renderLeaderboard();
+    }
+
+    // RENDER SERVICES LIST
+    function renderTable(dataToRender = services) {
+      const tbody = document.getElementById('services-table-body');
+      tbody.innerHTML = '';
+
+      if(dataToRender.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400 font-medium">No services found.</td></tr>`;
+        return;
+      }
+
+      dataToRender.forEach(srv => {
+        const row = document.createElement('tr');
+        row.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-all';
+        row.innerHTML = `
+          <td class="py-4 px-4 font-bold text-slate-400">#${srv.id}</td>
+          <td class="py-4 px-4">
+            <div class="flex items-center gap-2.5">
+              <i class="fa-brands ${srv.icon} text-base animate-pulse"></i>
+              <span class="font-bold text-slate-700 dark:text-slate-200">${srv.name}</span>
+            </div>
+          </td>
+          <td class="py-4 px-4 font-bold text-slate-800 dark:text-white">৳${srv.rate.toFixed(2)}</td>
+          <td class="py-4 px-4 text-center font-medium">${srv.min.toLocaleString()}</td>
+          <td class="py-4 px-4 text-center font-medium">${srv.max.toLocaleString()}</td>
+          <td class="py-4 px-4 text-center">
+            <button onclick="openOrderModal(${srv.id})" class="bg-blue-50 hover:bg-blue-600 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 hover:text-white text-[11px] font-bold px-3 py-1.5 rounded-xl transition-all">
+              Details
+            </button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // SPA VIEWS SWITCHER
+    const activeViews = ['dashboard', 'orders', 'add-funds', 'tickets', 'account'];
+
+    function switchTab(viewId) {
+      activeViews.forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        if(el) el.classList.add('hidden');
+      });
+
+      const targetView = document.getElementById(`view-${viewId}`);
+      if(targetView) targetView.classList.remove('hidden');
 
       const buttons = document.querySelectorAll('.nav-btn');
       buttons.forEach(btn => {
@@ -1143,821 +1065,365 @@
       }
     }
 
-    // Passwords Controls
+    // PASSWORD VISIBILITY TOGGLE
     function togglePasswordVisibility() {
-      const field = document.getElementById('login-password');
-      const icon = document.getElementById('password-toggle-icon');
-      if(field.type === 'password') {
-        field.type = 'text';
-        icon.className = 'fa-regular fa-eye-slash';
+      const pwdInput = document.getElementById('login-password');
+      const pwdIcon = document.getElementById('password-toggle-icon');
+      if(pwdInput.type === 'password') {
+        pwdInput.type = 'text';
+        pwdIcon.className = 'fa-regular fa-eye-slash';
       } else {
-        field.type = 'password';
-        icon.className = 'fa-regular fa-eye';
+        pwdInput.type = 'password';
+        pwdIcon.className = 'fa-regular fa-eye';
       }
     }
 
-    // Dark/Light Theme Switch
-    function toggleTheme() {
-      const html = document.documentElement;
-      const icon = document.getElementById('theme-icon');
-      if(html.classList.contains('dark')) {
-        html.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
-        icon.className = "fa-solid fa-moon text-lg";
-      } else {
-        html.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-        icon.className = "fa-solid fa-sun text-lg";
-      }
-    }
-
-    // User authentication status observer with race-condition safe initialization
-    auth.onAuthStateChanged(user => {
-      if(user) {
-        localUserState.uid = user.uid;
-        
-        // Check if database reference profile exists once before setting up real-time sync
-        const userRef = database.ref(`users/${user.uid}`);
-        userRef.once('value').then(snapshot => {
-          if (!snapshot.exists()) {
-            const defaultDb = {
-              displayName: user.displayName || "Client User",
-              username: user.email.split('@')[0] + "_" + Math.floor(Math.random() * 100),
-              email: user.email,
-              avatar: user.photoURL || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80",
-              balance: 0.00,
-              spent: 0.00,
-              ordersCount: 0,
-              pendingCount: 0,
-              apiKey: generateHexKey(32)
-            };
-            return userRef.set(defaultDb);
-          }
-        }).then(() => {
-          // Initialize live listener
-          userRef.on('value', snapshot => {
-            const dbUser = snapshot.val();
-            if(!dbUser) return;
-
-            localUserState.balance = parseFloat(dbUser.balance) || 0;
-            localUserState.spent = parseFloat(dbUser.spent) || 0;
-            localUserState.orders = parseInt(dbUser.ordersCount) || 0;
-            localUserState.pending = parseInt(dbUser.pendingCount) || 0;
-            localUserState.displayName = dbUser.displayName || "Client User";
-            localUserState.username = dbUser.username || "client";
-            localUserState.avatar = dbUser.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80";
-
-            // Hydrate HTML UI
-            document.getElementById('header-avatar').src = localUserState.avatar;
-            document.getElementById('acc-avatar-img').src = localUserState.avatar;
-            document.getElementById('header-user-display').innerText = localUserState.displayName;
-            document.getElementById('acc-user-header').innerText = localUserState.displayName;
-            document.getElementById('welcome-user-display').innerText = localUserState.displayName;
-            document.getElementById('header-username-display').innerText = `@${localUserState.username}`;
-            document.getElementById('acc-username-header').innerText = `@${localUserState.username}`;
-            document.getElementById('acc-username-field').value = localUserState.username;
-            document.getElementById('acc-name').value = localUserState.displayName;
-            document.getElementById('acc-email').value = dbUser.email;
-            document.getElementById('api-key-text').innerText = dbUser.apiKey;
-
-            updateClientDashboardCounters();
-          });
-
-          // Live Synchronize User Activity logs, deposits, tickets and orders
-          listenToUserTransactions();
-          listenToLiveLeaderboard();
-          listenToUserTickets();
-          listenToAdminFeeds();
-
-          // Screen transition
-          document.getElementById('login-screen').classList.add('hidden');
-          document.getElementById('app-screen').classList.remove('hidden');
-          renderTable();
-        }).catch(err => {
-          showToast("Database synchronization issue: " + err.message, 'error');
-        });
-      } else {
-        localUserState.uid = null;
-        document.getElementById('app-screen').classList.add('hidden');
-        document.getElementById('login-screen').classList.remove('hidden');
-      }
-    });
-
-    // Hex String Generator
-    function generateHexKey(len) {
-      const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
-      let result = '';
-      for (let i = 0; i < len; i++) {
-        result += chars[Math.floor(Math.random() * chars.length)];
-      }
-      return result;
-    }
-
-    // Google Authentication Flow with popup login
-    function handleGoogleLogin() {
-      const popup = document.getElementById('google-loading-popup');
-      popup.classList.remove('hidden');
-      const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider)
-        .then(() => {
-          popup.classList.add('hidden');
-          showToast('Sign-in accomplished with Google account!', 'success');
-        })
-        .catch(err => {
-          popup.classList.add('hidden');
-          showToast(err.message, 'error');
-        });
-    }
-
-    // Email/Password login
+    // STANDARD EMAIL/PASSWORD LOGIN
     function handleLogin(event) {
       event.preventDefault();
-      const email = document.getElementById('login-email').value;
-      const pass = document.getElementById('login-password').value;
-      auth.signInWithEmailAndPassword(email, pass)
-        .then(() => {
-          showToast('Login authorized!', 'success');
-        })
-        .catch(err => {
-          showToast(err.message, 'error');
-        });
-    }
+      showToast('Login Successful! Welcome to ST STEVENX.');
 
-    // Registration Form Controls
-    function openRegisterModal() {
-      document.getElementById('register-modal').classList.remove('hidden');
-    }
-    function closeRegisterModal() {
-      document.getElementById('register-modal').classList.add('hidden');
-    }
-    function handleRegisterSubmit(event) {
-      event.preventDefault();
-      const name = document.getElementById('reg-name').value;
-      const email = document.getElementById('reg-email').value;
-      const pass = document.getElementById('reg-password').value;
-
-      auth.createUserWithEmailAndPassword(email, pass)
-        .then(cred => {
-          return cred.user.updateProfile({
-            displayName: name
-          }).then(() => {
-            const defaultDb = {
-              displayName: name,
-              username: email.split('@')[0],
-              email: email,
-              avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80",
-              balance: 0.00,
-              spent: 0.00,
-              ordersCount: 0,
-              pendingCount: 0,
-              apiKey: generateHexKey(32)
-            };
-            return database.ref(`users/${cred.user.uid}`).set(defaultDb);
-          });
-        })
-        .then(() => {
-          closeRegisterModal();
-          showToast('Account creation successfully completed!', 'success');
-        })
-        .catch(err => {
-          showToast(err.message, 'error');
-        });
-    }
-
-    // Logout
-    function handleLogout() {
-      auth.signOut().then(() => {
-        showToast('Session logged out.');
-        switchTab('dashboard');
-      });
-    }
-
-    // Update locally stored metrics and Star Challenge UI parameters
-    function updateClientDashboardCounters() {
-      document.getElementById('stat-balance').innerText = `৳${localUserState.balance.toFixed(2)}`;
-      document.getElementById('stat-spent').innerText = `৳${localUserState.spent.toFixed(2)}`;
-      document.getElementById('stat-orders').innerText = localUserState.orders;
-      document.getElementById('stat-pending').innerText = localUserState.pending;
-
-      // Challenge mechanics checking
-      const spentValue = localUserState.spent;
-      const progressPercent = Math.min(100, (spentValue / 100) * 100);
-      document.getElementById('mission-progress-text').innerText = `৳${spentValue.toFixed(2)}`;
-      document.getElementById('mission-percentage').innerText = `${Math.floor(progressPercent)}%`;
-      document.getElementById('mission-progress-bar').style.width = `${progressPercent}%`;
-
-      const mCard = document.getElementById('mission-warning-card');
-      const hb = document.getElementById('badge-header-container');
-      const wb = document.getElementById('badge-welcome-container');
-      const ab = document.getElementById('badge-account-container');
-
-      if(spentValue >= 100) {
-        hb.classList.remove('hidden');
-        wb.classList.remove('hidden');
-        ab.classList.remove('hidden');
-        mCard.className = "bg-gradient-to-r from-emerald-950/60 to-slate-950/60 border border-emerald-800/40 p-5 rounded-2xl backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-4";
-        mCard.querySelector('.fa-gift').parentElement.className = "bg-emerald-500/20 text-emerald-400 p-3 rounded-xl text-lg animate-bounce";
-        mCard.querySelector('h4').innerText = "🎉 Premium Star Status Unlocked!";
-        mCard.querySelector('p').innerText = "অভিনন্দন! আপনার ব্লু ব্যাজ সফলভাবে আনলক হয়েছে। প্রতি অর্ডারে ৳১০.০০ ফ্ল্যাট ডিসকাউন্ট অটো-অ্যাপ্লাইড হচ্ছে।";
-      } else {
-        hb.classList.add('hidden');
-        wb.classList.add('hidden');
-        ab.classList.add('hidden');
-      }
-    }
-
-    // Active Category Select filters
-    function filterCategory(cat) {
-      selectedFilterCategory = cat;
-      const buttons = document.querySelectorAll('.cat-btn');
-      buttons.forEach(btn => {
-        btn.className = "cat-btn w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50";
-      });
-      // Set target selection styling
-      event.currentTarget.className = "cat-btn w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-semibold bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400";
+      document.getElementById('login-screen').classList.add('hidden');
+      const appScreen = document.getElementById('app-screen');
+      appScreen.classList.remove('hidden');
+      appScreen.classList.add('flex');
       
-      const filtered = cat === 'All' ? services : services.filter(s => s.category === cat);
-      renderTable(filtered);
+      updateStatsUI();
+      renderTable();
     }
 
-    // Live search queries
-    function handleSearch() {
-      const q = document.getElementById('service-search').value.toLowerCase();
-      let matched = services.filter(s => s.name.toLowerCase().includes(q));
-      if(selectedFilterCategory !== 'All') {
-        matched = matched.filter(s => s.category === selectedFilterCategory);
-      }
-      renderTable(matched);
-    }
+    // GOOGLE LOGIN PROCESS
+    function handleGoogleLogin() {
+      const googlePopup = document.getElementById('google-loading-popup');
+      googlePopup.classList.remove('hidden');
 
-    // Hydrate service dynamic table
-    function renderTable(data = services) {
-      const tbody = document.getElementById('services-table-body');
-      tbody.innerHTML = '';
-      if(data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400 font-medium">No services found.</td></tr>`;
-        return;
-      }
-      data.forEach(s => {
-        const tr = document.createElement('tr');
-        tr.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-all';
-        tr.innerHTML = `
-          <td class="py-4 px-4 font-bold text-slate-400">#${s.id}</td>
-          <td class="py-4 px-4">
-            <div class="flex items-center gap-2.5">
-              <i class="fa-brands ${s.icon} text-base animate-pulse"></i>
-              <span class="font-bold text-slate-700 dark:text-slate-200">${s.name}</span>
-            </div>
-          </td>
-          <td class="py-4 px-4 font-bold text-slate-800 dark:text-white">৳${s.rate.toFixed(2)}</td>
-          <td class="py-4 px-4 text-center font-medium">${s.min}</td>
-          <td class="py-4 px-4 text-center font-medium">${s.max}</td>
-          <td class="py-4 px-4 text-center">
-            <button onclick="openOrderModal(${s.id})" class="bg-blue-50 hover:bg-blue-600 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 hover:text-white text-[11px] font-bold px-3 py-1.5 rounded-xl transition-all">
-              Details
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    // Synchronize transaction list updates
-    function listenToUserTransactions() {
-      // Fetch dynamic Orders Live
-      database.ref('orders').orderByChild('userId').equalTo(localUserState.uid).on('value', snap => {
-        const container = document.getElementById('orders-log-table');
-        container.innerHTML = '';
-        const data = snap.val() || {};
-        const keys = Object.keys(data).reverse();
-
-        if(keys.length === 0) {
-          container.innerHTML = `<tr id="empty-orders-row"><td colspan="7" class="py-6 text-center text-slate-400 font-medium">No orders placed yet.</td></tr>`;
-          return;
-        }
-
-        let pendingCount = 0;
-        keys.forEach(k => {
-          const item = data[k];
-          if(item.status === 'Pending') pendingCount++;
-          const date = item.timestamp ? new Date(item.timestamp).toLocaleDateString() : 'Just Now';
-          const badgeClass = item.status === 'Completed' ? 'bg-emerald-100 text-emerald-600' :
-                             item.status === 'Cancelled' ? 'bg-rose-100 text-rose-600' : 'bg-amber-100 text-amber-600 animate-pulse';
-
-          container.innerHTML += `
-            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/20">
-              <td class="py-4 px-4 font-bold text-slate-400">#${k.substring(1, 7).toUpperCase()}</td>
-              <td class="py-4 px-4">${date}</td>
-              <td class="py-4 px-4 font-bold text-slate-700 dark:text-slate-200">${item.serviceName}</td>
-              <td class="py-4 px-4 text-blue-500 truncate max-w-xs"><a href="${item.link}" target="_blank">${item.link}</a></td>
-              <td class="py-4 px-4">${item.quantity}</td>
-              <td class="py-4 px-4 font-bold">৳${item.charge.toFixed(2)}</td>
-              <td class="py-4 px-4"><span class="${badgeClass} px-2.5 py-1 rounded-full font-bold text-[10px]">${item.status}</span></td>
-            </tr>
-          `;
-        });
-        database.ref(`users/${localUserState.uid}`).update({
-          ordersCount: keys.length,
-          pendingCount: pendingCount
-        });
-      });
-
-      // Fetch dynamic Deposits Live
-      database.ref('deposits').orderByChild('userId').equalTo(localUserState.uid).on('value', snap => {
-        const container = document.getElementById('deposit-logs-body');
-        container.innerHTML = '';
-        const data = snap.val() || {};
-        const keys = Object.keys(data).reverse();
-
-        if(keys.length === 0) {
-          container.innerHTML = `<tr id="empty-deposits-row"><td colspan="5" class="py-6 text-center text-slate-400 font-medium">No deposit history found.</td></tr>`;
-          return;
-        }
-
-        keys.forEach(k => {
-          const item = data[k];
-          const date = item.timestamp ? new Date(item.timestamp).toLocaleDateString() : 'Just Now';
-          const badgeClass = item.status === 'Approved' ? 'bg-emerald-100 text-emerald-600' :
-                             item.status === 'Rejected' ? 'bg-rose-100 text-rose-600' : 'bg-amber-100 text-amber-600 animate-pulse';
-          
-          container.innerHTML += `
-            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/20">
-              <td class="py-4 px-4 font-mono font-bold text-slate-500">${item.txId}</td>
-              <td class="py-4 px-4">${date}</td>
-              <td class="py-4 px-4">${item.senderNumber}</td>
-              <td class="py-4 px-4 font-bold text-slate-700 dark:text-slate-300">৳${item.amount.toFixed(2)}</td>
-              <td class="py-4 px-4"><span class="${badgeClass} px-2.5 py-1 rounded-full font-bold text-[10px]">${item.status}</span></td>
-            </tr>
-          `;
-        });
-      });
-    }
-
-    // Synchronize Support Ticket requests
-    function listenToUserTickets() {
-      database.ref('tickets').orderByChild('userId').equalTo(localUserState.uid).on('value', snap => {
-        const container = document.getElementById('tickets-history-container');
-        container.innerHTML = '';
-        const data = snap.val() || {};
-        const keys = Object.keys(data).reverse();
-
-        if(keys.length === 0) {
-          container.innerHTML = `<div class="p-4 text-center text-slate-400 text-xs">No active support tickets found.</div>`;
-          return;
-        }
-
-        keys.forEach(k => {
-          const ticket = data[k];
-          const badgeClass = ticket.status === 'Answered' ? 'text-emerald-500' : 'text-blue-500';
-          container.innerHTML += `
-            <div class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-slate-150 dark:border-slate-800 flex justify-between items-center">
-              <div>
-                <h4 class="text-xs font-bold">${ticket.subject}</h4>
-                <p class="text-[10px] text-slate-500 mt-1">${ticket.description}</p>
-                <span class="text-[10px] text-slate-400">Status: <span class="${badgeClass} font-bold">${ticket.status}</span> | Ticket ID: #${k.substring(1, 6).toUpperCase()}</span>
-              </div>
-            </div>
-          `;
-        });
-      });
-    }
-
-    // Submit Support Tickets
-    function handleTicketSubmit(event) {
-      event.preventDefault();
-      const subject = document.getElementById('ticket-subject').value;
-      const msg = document.getElementById('ticket-msg').value;
-
-      const newTicketRef = database.ref('tickets').push();
-      newTicketRef.set({
-        userId: localUserState.uid,
-        userEmail: auth.currentUser.email,
-        subject: subject,
-        description: msg,
-        status: 'Open',
-        timestamp: firebase.database.ServerValue.TIMESTAMP
-      }).then(() => {
-        showToast('Support Ticket submitted successfully!', 'success');
-        document.getElementById('ticket-subject').value = '';
-        document.getElementById('ticket-msg').value = '';
-      });
-    }
-
-    // Live Database Leaderboard tracking
-    function listenToLiveLeaderboard() {
-      database.ref('users').on('value', snapshot => {
-        const users = snapshot.val() || {};
-        let list = [];
+      setTimeout(() => {
+        // Set dynamic credentials of google user
+        userDetails.displayName = "Kaisar Vai Support";
+        userDetails.username = "kaisarvai007";
+        userDetails.email = "kaisarvai007@gmail.com";
         
-        Object.keys(users).forEach(k => {
-          list.push({
-            username: `@${users[k].username}`,
-            spent: parseFloat(users[k].spent) || 0,
-            avatar: users[k].avatar,
-            isMe: k === localUserState.uid
-          });
-        });
+        const googleAvatar = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80";
+        userDetails.avatar = googleAvatar;
 
-        // Ensure we populate the dashboard with seed data if lists are short
-        const placeholders = ['kaisarvai007', 'bd_provider', 'reseller_king', 'shakib_99', 'tanvir_smm'];
-        for(let i = list.length; i < 20; i++) {
-          list.push({
-            username: `@${placeholders[i % placeholders.length]}_${10 + i}`,
-            spent: Math.max(15, 3500 - (i * 120) + Math.random() * 50),
-            avatar: `https://i.pravatar.cc/100?img=${i + 1}`,
-            isMe: false
-          });
-        }
+        document.getElementById('header-avatar').src = googleAvatar;
+        document.getElementById('acc-avatar-img').src = googleAvatar;
 
-        list.sort((a,b) => b.spent - a.spent);
-        const container = document.getElementById('leaderboard-container');
-        container.innerHTML = '';
+        document.getElementById('header-user-display').innerText = userDetails.displayName;
+        document.getElementById('acc-user-header').innerText = userDetails.displayName;
+        document.getElementById('welcome-user-display').innerText = userDetails.displayName;
+
+        document.getElementById('header-username-display').innerText = `@${userDetails.username}`;
+        document.getElementById('acc-username-header').innerText = `@${userDetails.username}`;
+        document.getElementById('acc-username-field').value = userDetails.username;
+        document.getElementById('acc-name').value = userDetails.displayName;
+        document.getElementById('acc-email').value = userDetails.email;
+
+        googlePopup.classList.add('hidden');
+        document.getElementById('login-screen').classList.add('hidden');
         
-        list.slice(0, 20).forEach((user, idx) => {
-          const row = document.createElement('div');
-          row.className = `flex items-center justify-between p-2 rounded-xl border transition-all ${user.isMe ? 'bg-blue-500/10 border-blue-500/30 ring-2 ring-blue-500/20' : 'bg-slate-50/50 dark:bg-slate-900/40 border-slate-100 dark:border-slate-800/40'}`;
-          let rankColor = 'text-slate-400';
-          if(idx === 0) rankColor = 'text-yellow-500';
-          if(idx === 1) rankColor = 'text-slate-300';
-          if(idx === 2) rankColor = 'text-amber-600';
+        const appScreen = document.getElementById('app-screen');
+        appScreen.classList.remove('hidden');
+        appScreen.classList.add('flex');
 
-          row.innerHTML = `
-            <div class="flex items-center gap-2 overflow-hidden">
-              <span class="text-xs font-black w-4 text-center ${rankColor}">#${idx + 1}</span>
-              <img src="${user.avatar}" class="w-7 h-7 rounded-full object-cover ring-1 ring-blue-500/10">
-              <span class="text-[11px] font-bold truncate text-slate-700 dark:text-slate-300">${user.username}</span>
-            </div>
-            <span class="text-[10px] font-black shrink-0 text-slate-800 dark:text-slate-200">৳${user.spent.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
-          `;
-          container.appendChild(row);
-        });
-      });
+        showToast('Successfully Signed In with Google Account!');
+        generateLeaderboard();
+        updateStatsUI();
+        renderTable();
+      }, 1500);
     }
 
-    // Account updates
+    function handleLogout() {
+      showToast('Logged out successfully.');
+
+      document.getElementById('app-screen').classList.add('hidden');
+      document.getElementById('app-screen').classList.remove('flex');
+      document.getElementById('login-screen').classList.remove('hidden');
+
+      switchTab('dashboard');
+    }
+
+    // ACCOUNT UPDATE
     function handleAccountUpdate(event) {
       event.preventDefault();
       const updatedName = document.getElementById('acc-name').value;
       const updatedUsername = document.getElementById('acc-username-field').value;
 
-      database.ref(`users/${localUserState.uid}`).update({
-        displayName: updatedName,
-        username: updatedUsername
-      }).then(() => {
-        showToast('Your Profile has been customized successfully!', 'success');
-      });
+      userDetails.displayName = updatedName;
+      userDetails.username = updatedUsername;
+
+      document.getElementById('header-user-display').innerText = updatedName;
+      document.getElementById('acc-user-header').innerText = updatedName;
+      document.getElementById('welcome-user-display').innerText = updatedName;
+
+      document.getElementById('header-username-display').innerText = `@${updatedUsername}`;
+      document.getElementById('acc-username-header').innerText = `@${updatedUsername}`;
+
+      renderLeaderboard();
+      showToast(`Profile updated! Name: ${updatedName}, Username: @${updatedUsername}`);
     }
 
-    // Avatar upload conversions
     function uploadAvatar(event) {
       const file = event.target.files[0];
       if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
-          database.ref(`users/${localUserState.uid}`).update({
-            avatar: e.target.result
-          }).then(() => {
-            showToast('Profile image updated successfully!', 'success');
-          });
+          document.getElementById('acc-avatar-img').src = e.target.result;
+          document.getElementById('header-avatar').src = e.target.result;
+          userDetails.avatar = e.target.result;
+          renderLeaderboard();
+          showToast('Profile avatar updated successfully!');
         };
         reader.readAsDataURL(file);
       }
     }
 
-    // API key copier
-    function copyApiKey() {
-      const k = document.getElementById('api-key-text').innerText;
-      navigator.clipboard.writeText(k).then(() => {
-        showToast('API Key copied to clipboard!', 'success');
-      });
-    }
-    function regenerateApiKey() {
-      const newKey = generateHexKey(32);
-      database.ref(`users/${localUserState.uid}`).update({
-        apiKey: newKey
-      }).then(() => {
-        showToast('Developer API Key regenerated successfully!', 'success');
-      });
+    // SUPPORT TICKETS SYSTEM
+    function handleTicketSubmit(event) {
+      event.preventDefault();
+      const subject = document.getElementById('ticket-subject').value;
+      const container = document.getElementById('tickets-history-container');
+      const ticketId = Math.floor(10000 + Math.random() * 90000);
+
+      const ticketDiv = document.createElement('div');
+      ticketDiv.className = 'bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-slate-150 dark:border-slate-800 flex justify-between items-center';
+      ticketDiv.innerHTML = `
+        <div>
+          <h4 class="text-xs font-bold">${subject}</h4>
+          <span class="text-[10px] text-slate-400">Status: <span class="text-amber-500 font-bold">Pending Approval</span> | Ticket ID: #${ticketId}</span>
+        </div>
+      `;
+      container.prepend(ticketDiv);
+
+      showToast(`Support ticket #${ticketId} created successfully!`);
+      document.getElementById('ticket-subject').value = '';
+      document.getElementById('ticket-msg').value = '';
     }
 
-    // Number copier
-    function copyNumber(num) {
-      navigator.clipboard.writeText(num).then(() => {
-        showToast('bKash wallet number copied successfully!', 'success');
-      });
-    }
-
-    // Currency updates
+    // ADD FUNDS LIVE INPUT TO FINAL CONVERTER
     function calculateAddFundsConversion() {
-      const input = parseFloat(document.getElementById('tx-amount').value) || 0;
-      document.getElementById('tx-converted-usd').value = input > 0 ? `${input.toFixed(2)}` : '0.00';
+      const bdtAmount = parseFloat(document.getElementById('tx-amount').value) || 0;
+      if(bdtAmount > 0) {
+        document.getElementById('tx-converted-usd').value = `${bdtAmount.toFixed(2)}`;
+      } else {
+        document.getElementById('tx-converted-usd').value = '0.00';
+      }
     }
 
-    // Transaction submit request
+    // ADD FUNDS SUBMISSION
     function handleTransactionSubmit(event) {
       event.preventDefault();
-      const sender = document.getElementById('tx-sender').value;
-      const amount = parseFloat(document.getElementById('tx-amount').value) || 0;
-      const txid = document.getElementById('tx-id').value.trim().toUpperCase();
-
-      if(amount < 100) {
-        showToast('Error: Minimum deposit transaction value must be 100 BDT.', 'error');
-        return;
-      }
-
+      
       const submitBtn = document.getElementById('deposit-submit-btn');
       const btnText = document.getElementById('btn-deposit-text');
       const spinner = document.getElementById('btn-deposit-spinner');
-
+      
       submitBtn.disabled = true;
       btnText.classList.add('hidden');
       spinner.classList.remove('hidden');
 
-      const depositRef = database.ref('deposits').push();
-      depositRef.set({
-        userId: localUserState.uid,
-        userEmail: auth.currentUser.email,
-        username: localUserState.username,
-        senderNumber: sender,
-        amount: amount,
-        txId: txid,
-        status: 'Pending',
-        timestamp: firebase.database.ServerValue.TIMESTAMP
-      }).then(() => {
+      const senderNum = document.getElementById('tx-sender').value;
+      const amount = parseFloat(document.getElementById('tx-amount').value) || 0;
+      const txId = document.getElementById('tx-id').value.toUpperCase().trim();
+
+      setTimeout(() => {
+        // Append as "Pending" row to BDT Deposit logs table with a manual "Approve" button
+        const logBody = document.getElementById('deposit-logs-body');
+        const emptyRow = document.getElementById('empty-deposits-row');
+        if(emptyRow) emptyRow.remove();
+
+        const newRow = document.createElement('tr');
+        newRow.id = `tx-row-${txId}`;
+        newRow.className = "hover:bg-slate-50 dark:hover:bg-slate-800/20";
+        newRow.innerHTML = `
+          <td class="py-4 px-4 font-mono font-bold text-slate-500">${txId}</td>
+          <td class="py-4 px-4">Today</td>
+          <td class="py-4 px-4">${senderNum}</td>
+          <td class="py-4 px-4 font-bold text-slate-700 dark:text-slate-300">৳${amount.toFixed(2)} BDT</td>
+          <td class="py-4 px-4" id="tx-status-cell-${txId}">
+            <div class="flex items-center gap-2">
+              <span class="bg-amber-100 text-amber-600 px-2 py-1 rounded-full font-bold text-[10px] animate-pulse">Pending</span>
+              <button onclick="approveDeposit('${txId}', ${amount})" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[9px] font-black px-2.5 py-1 rounded-lg transition-all shadow-sm flex items-center gap-0.5">
+                <i class="fa-solid fa-check"></i> Approve
+              </button>
+            </div>
+          </td>
+        `;
+        logBody.prepend(newRow);
+
+        // Reset submit btn
         submitBtn.disabled = false;
         btnText.classList.remove('hidden');
         spinner.classList.add('hidden');
 
-        showToast('পেমেন্ট রিকোয়েস্ট সফলভাবে সাবমিট করা হয়েছে। এডমিন ভেরিফাই করে অ্যাপ্রুভ করবেন!', 'success');
+        showToast(`৳${amount.toFixed(2)} BDT পেমেন্ট রিকোয়েস্ট পেন্ডিং! আপনি নিচে ম্যানুয়ালি "Approve" বাটনে ক্লিক না করা পর্যন্ত এটি পেন্ডিং থাকবে।`);
+        
+        // Reset input fields
         document.getElementById('tx-sender').value = '';
         document.getElementById('tx-amount').value = '';
         document.getElementById('tx-id').value = '';
         document.getElementById('tx-converted-usd').value = '';
-      }).catch(err => {
-        submitBtn.disabled = false;
-        btnText.classList.remove('hidden');
-        spinner.classList.add('hidden');
-        showToast(err.message, 'error');
-      });
+      }, 1000);
     }
 
-    // Modal display controls
+    // MANUAL APPROVE DEPOSIT ACTION (Will not approve until user clicks)
+    function approveDeposit(txId, amount) {
+      const statusCell = document.getElementById(`tx-status-cell-${txId}`);
+      if (statusCell) {
+        statusCell.innerHTML = `<span class="bg-emerald-100 text-emerald-600 px-2.5 py-1 rounded-full font-bold text-[10px]">Approved</span>`;
+        
+        // Add BDT amount directly to wallet state now!
+        walletState.balance += amount;
+        updateStatsUI();
+        
+        showToast(`৳${amount.toFixed(2)} BDT পেমেন্ট সফলভাবে অ্যাপ্রুভ করা হয়েছে এবং মেইন ব্যালেন্সে যোগ হয়েছে!`);
+      }
+    }
+
+    // NEW ORDER MODAL CONTROL
     function openOrderModal(serviceId = null) {
-      document.getElementById('order-modal').classList.remove('hidden');
+      const modal = document.getElementById('order-modal');
+      modal.classList.remove('hidden');
       if(serviceId) {
-        const item = services.find(s => s.id === serviceId);
-        document.getElementById('modal-category').value = item.category;
+        const selectedService = services.find(s => s.id === serviceId);
+        document.getElementById('modal-category').value = selectedService.category;
         populateModalServices();
-        document.getElementById('modal-service').value = item.id;
+        document.getElementById('modal-service').value = selectedService.id;
         updateServiceDetails();
       } else {
         document.getElementById('modal-category').selectedIndex = 0;
         populateModalServices();
       }
     }
+
+    // CLOSE NEW ORDER MODAL
     function closeOrderModal() {
       document.getElementById('order-modal').classList.add('hidden');
     }
+
     function populateModalServices() {
-      const selectedCat = document.getElementById('modal-category').value;
-      const selector = document.getElementById('modal-service');
-      selector.innerHTML = '';
-      services.filter(s => s.category === selectedCat).forEach(s => {
+      const cat = document.getElementById('modal-category').value;
+      const srvSelect = document.getElementById('modal-service');
+      srvSelect.innerHTML = '';
+      const filtered = services.filter(s => s.category === cat);
+      filtered.forEach(s => {
         const opt = document.createElement('option');
         opt.value = s.id;
         opt.innerText = s.name;
-        selector.appendChild(opt);
+        srvSelect.appendChild(opt);
       });
       updateServiceDetails();
     }
+
     function updateServiceDetails() {
-      const targetId = parseInt(document.getElementById('modal-service').value);
-      const matched = services.find(s => s.id === targetId);
-      if(matched) {
-        document.getElementById('modal-rate').innerText = `৳${matched.rate.toFixed(2)}`;
-        const qInput = document.getElementById('modal-quantity');
-        qInput.min = matched.min;
-        qInput.placeholder = `Min: ${matched.min}`;
+      const srvId = parseInt(document.getElementById('modal-service').value);
+      const srv = services.find(s => s.id === srvId);
+      if(srv) {
+        document.getElementById('modal-rate').innerText = `৳${srv.rate.toFixed(2)}`;
+        const qtyInput = document.getElementById('modal-quantity');
+        qtyInput.min = srv.min;
+        qtyInput.placeholder = `Min: ${srv.min}`;
         calculateCost();
       }
     }
+
+    // CALCULATE MOCK BILL AND SUB-TOTALS
     function calculateCost() {
-      const matchedId = parseInt(document.getElementById('modal-service').value);
-      const matched = services.find(s => s.id === matchedId);
-      const qty = parseInt(document.getElementById('modal-quantity').value) || 0;
+      const srvId = parseInt(document.getElementById('modal-service').value);
+      const srv = services.find(s => s.id === srvId);
+      
+      const subtotalText = document.getElementById('modal-subtotal');
+      const discountTag = document.getElementById('modal-discount-tag');
+      const finalCostInput = document.getElementById('modal-cost');
 
-      const tag = document.getElementById('modal-discount-tag');
-      const finalInput = document.getElementById('modal-cost');
-
-      if(!matched || qty <= 0) {
-        finalInput.value = '0.00';
-        tag.innerText = '৳0.00';
+      // Defensive Guard to prevent NaN error
+      if (isNaN(srvId) || !srv) {
+        subtotalText.innerText = '৳0.00';
+        finalCostInput.value = '0.00';
+        discountTag.innerText = `৳0.00`;
         return;
       }
 
-      const raw = (qty * matched.rate) / 1000;
-      let discount = 0.00;
-      if(localUserState.spent >= 100) {
-        discount = 10.00;
-        tag.innerText = `-৳10.00`;
-        tag.className = "font-black text-emerald-500 animate-pulse";
-      } else {
-        tag.innerText = 'Locked';
-        tag.className = "text-[10px] font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded";
-      }
+      const qty = parseInt(document.getElementById('modal-quantity').value) || 0;
 
-      const calculated = Math.max(0, raw - discount);
-      finalInput.value = calculated.toFixed(2);
+      if(qty > 0) {
+        const cost = (qty * srv.rate) / 1000;
+        subtotalText.innerText = `৳${cost.toFixed(2)}`;
+        
+        let discount = 0.00;
+        if(walletState.spent >= 100.00) {
+          discount = 10.00;
+          discountTag.innerText = `-৳10.00`;
+          discountTag.className = "font-black text-emerald-500 animate-pulse";
+        } else {
+          discountTag.innerText = `Locked`;
+          discountTag.className = "text-[10px] font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded";
+        }
+
+        const finalCharge = Math.max(0, cost - discount);
+        finalCostInput.value = finalCharge.toFixed(2);
+      } else {
+        subtotalText.innerText = '৳0.00';
+        finalCostInput.value = '0.00';
+        discountTag.innerText = `৳0.00`;
+        discountTag.className = "font-black text-rose-500";
+      }
     }
 
-    // Place persistent Client orders
+    // ORDER SUBMIT (CHECK FOR WALLET SUFFICIENT BDT BALANCE)
     function handlePlaceOrder(event) {
       event.preventDefault();
-      const selectedId = parseInt(document.getElementById('modal-service').value);
-      const serviceObj = services.find(s => s.id === selectedId);
+      const srvId = parseInt(document.getElementById('modal-service').value);
+      const srv = services.find(s => s.id === srvId);
       const qty = parseInt(document.getElementById('modal-quantity').value) || 0;
       const link = document.getElementById('modal-link').value;
-      const cost = parseFloat(document.getElementById('modal-cost').value) || 0;
+      const finalCost = parseFloat(document.getElementById('modal-cost').value) || 0;
 
-      if(cost > localUserState.balance) {
-        showToast('Error: পর্যাপ্ত ব্যালেন্স নেই! দয়া করে ব্যালেন্স এড করুন।', 'error');
+      // WALLET BDT BALANCE CHECK
+      if(finalCost > walletState.balance) {
+        showToast('Error: পর্যাপ্ত ব্যালেন্স নেই! দয়া করে ব্যালেন্স এড করুন।');
         return;
       }
 
-      // Deduct client balance and update parameters
-      const newBalance = localUserState.balance - cost;
-      const newSpent = localUserState.spent + cost;
+      // DEDUCT & UPDATE BDT STATE
+      walletState.balance -= finalCost;
+      walletState.spent += finalCost;
+      walletState.orders += 1;
+      walletState.pending += 1;
+      updateStatsUI();
 
-      database.ref(`users/${localUserState.uid}`).update({
-        balance: newBalance,
-        spent: newSpent
-      }).then(() => {
-        const orderRef = database.ref('orders').push();
-        orderRef.set({
-          userId: localUserState.uid,
-          userEmail: auth.currentUser.email,
-          username: localUserState.username,
-          serviceId: selectedId,
-          serviceName: serviceObj.name,
-          link: link,
-          quantity: qty,
-          charge: cost,
-          status: 'Pending',
-          timestamp: firebase.database.ServerValue.TIMESTAMP
-        }).then(() => {
-          showToast('অর্ডার সফলভাবে সম্পন্ন হয়েছে! ID: #' + orderRef.key.substring(1,7).toUpperCase(), 'success');
-          document.getElementById('modal-link').value = '';
-          document.getElementById('modal-quantity').value = '';
-          document.getElementById('modal-cost').value = '0.00';
-          closeOrderModal();
-        });
-      });
+      // APPEND TO ORDER HISTORIES (BDT)
+      const orderBody = document.getElementById('orders-log-table');
+      const emptyRow = document.getElementById('empty-orders-row');
+      if(emptyRow) emptyRow.remove();
+
+      const orderId = Math.floor(10000 + Math.random() * 90000);
+      const newRow = document.createElement('tr');
+      newRow.className = "hover:bg-slate-50 dark:hover:bg-slate-800/20";
+      newRow.innerHTML = `
+        <td class="py-4 px-4 font-bold text-slate-400">#${orderId}</td>
+        <td class="py-4 px-4">Just Now</td>
+        <td class="py-4 px-4 font-bold text-slate-700 dark:text-slate-200">${srv.name}</td>
+        <td class="py-4 px-4 text-blue-500 truncate max-w-xs">${link}</td>
+        <td class="py-4 px-4">${qty.toLocaleString()}</td>
+        <td class="py-4 px-4 font-bold">৳${finalCost.toFixed(2)}</td>
+        <td class="py-4 px-4"><span class="bg-amber-100 text-amber-600 px-2.5 py-1 rounded-full font-bold text-[10px]">Pending</span></td>
+      `;
+      orderBody.prepend(newRow);
+
+      showToast(`অর্ডার সফলভাবে সম্পন্ন হয়েছে! ID: #${orderId} (মূল্য: ৳${finalCost.toFixed(2)})`);
+      
+      document.getElementById('modal-link').value = '';
+      document.getElementById('modal-quantity').value = '';
+      document.getElementById('modal-cost').value = '0.00';
+      
+      closeOrderModal();
     }
 
-    // Workspace layout toggle to Admin Desk view
-    function toggleAdminView() {
-      const modeBtn = document.getElementById('admin-mode-btn');
-      if(!isAdminActive) {
-        isAdminActive = true;
-        modeBtn.className = "w-full bg-blue-600/20 border border-blue-500/30 text-blue-400 hover:bg-blue-600/30 font-bold py-2.5 px-4 rounded-xl text-xs transition-all flex items-center justify-center gap-2";
-        modeBtn.innerHTML = `<i class="fa-solid fa-user"></i> Close Admin Panel`;
-        switchTab('admin');
-      } else {
-        isAdminActive = false;
-        modeBtn.className = "w-full bg-amber-600/20 border border-amber-500/30 text-amber-400 hover:bg-amber-600/30 font-bold py-2.5 px-4 rounded-xl text-xs transition-all flex items-center justify-center gap-2";
-        modeBtn.innerHTML = `<i class="fa-solid fa-user-shield"></i> Open Admin Panel`;
-        switchTab('dashboard');
-      }
-    }
-
-    // Administrative observer nodes
-    function listenToAdminFeeds() {
-      // Pending deposits
-      database.ref('deposits').on('value', snapshot => {
-        const tableBody = document.getElementById('admin-deposits-table-body');
-        tableBody.innerHTML = '';
-        const raw = snapshot.val() || {};
-        let count = 0;
-
-        Object.keys(raw).forEach(k => {
-          const dep = raw[k];
-          if(dep.status === 'Pending') {
-            count++;
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-              <td class="py-4 px-4">
-                <div class="font-bold text-slate-700 dark:text-slate-200">@${dep.username}</div>
-                <div class="text-[9px] text-slate-400 font-mono">${dep.userEmail}</div>
-              </td>
-              <td class="py-4 px-4 font-mono font-bold text-amber-500">${dep.txId}</td>
-              <td class="py-4 px-4 font-black text-slate-800 dark:text-white">৳${dep.amount.toFixed(2)}</td>
-              <td class="py-4 px-4 text-center space-x-1">
-                <button onclick="adminActionApproveDeposit('${k}', '${dep.userId}', ${dep.amount})" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] px-2.5 py-1.5 rounded-lg transition-all font-bold">Approve</button>
-                <button onclick="adminActionRejectDeposit('${k}')" class="bg-rose-600 hover:bg-rose-700 text-white text-[10px] px-2.5 py-1.5 rounded-lg transition-all font-bold">Reject</button>
-              </td>
-            `;
-            tableBody.appendChild(tr);
-          }
-        });
-
-        if(count === 0) {
-          tableBody.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-slate-400 font-medium">No pending deposit verification request.</td></tr>`;
-        }
-      });
-
-      // Active client pipeline orders
-      database.ref('orders').on('value', snapshot => {
-        const tableBody = document.getElementById('admin-orders-table-body');
-        tableBody.innerHTML = '';
-        const raw = snapshot.val() || {};
-        let count = 0;
-
-        Object.keys(raw).forEach(k => {
-          const ord = raw[k];
-          if(ord.status === 'Pending') {
-            count++;
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-              <td class="py-4 px-4">
-                <div class="font-bold text-slate-700 dark:text-slate-200">@${ord.username}</div>
-                <div class="text-[9px] text-slate-400 font-mono">${ord.userEmail}</div>
-              </td>
-              <td class="py-4 px-4 max-w-[120px] truncate">
-                <div class="font-bold">${ord.serviceName}</div>
-                <div class="text-[9px] text-blue-400 truncate">${ord.link}</div>
-              </td>
-              <td class="py-4 px-4 font-bold text-slate-800 dark:text-white">৳${ord.charge.toFixed(2)}</td>
-              <td class="py-4 px-4 text-center space-x-1">
-                <button onclick="adminActionCompleteOrder('${k}')" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] px-2.5 py-1.5 rounded-lg transition-all font-bold">Complete</button>
-                <button onclick="adminActionCancelOrder('${k}', '${ord.userId}', ${ord.charge})" class="bg-rose-600 hover:bg-rose-700 text-white text-[10px] px-2.5 py-1.5 rounded-lg transition-all font-bold">Cancel & Refund</button>
-              </td>
-            `;
-            tableBody.appendChild(tr);
-          }
-        });
-
-        if(count === 0) {
-          tableBody.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-slate-400 font-medium">No pending client order requests.</td></tr>`;
-        }
-      });
-    }
-
-    // Administrative action workflows
-    function adminActionApproveDeposit(depId, clientUid, amount) {
-      database.ref(`deposits/${depId}`).update({ status: 'Approved' }).then(() => {
-        database.ref(`users/${clientUid}/balance`).transaction(currentBal => {
-          return (parseFloat(currentBal) || 0) + amount;
-        }).then(() => {
-          showToast('Deposit successfully approved! Balance has been credited.', 'success');
-        });
-      });
-    }
-
-    // Reject Deposit
-    function adminActionRejectDeposit(depId) {
-      database.ref(`deposits/${depId}`).update({ status: 'Rejected' }).then(() => {
-        showToast('Payment verification request rejected successfully.');
-      });
-    }
-
-    // Complete Order
-    function adminActionCompleteOrder(orderId) {
-      database.ref(`orders/${orderId}`).update({ status: 'Completed' }).then(() => {
-        showToast('Target client order status marked Completed!', 'success');
-      });
-    }
-
-    // Cancel Order
-    function adminActionCancelOrder(orderId, clientUid, amount) {
-      database.ref(`orders/${orderId}`).update({ status: 'Cancelled' }).then(() => {
-        database.ref(`users/${clientUid}`).get().then(snapshot => {
-          if(snapshot.exists()) {
-            const data = snapshot.val();
-            const originalBal = parseFloat(data.balance) || 0;
-            const originalSpent = parseFloat(data.spent) || 0;
-            
-            database.ref(`users/${clientUid}`).update({
-              balance: originalBal + amount,
-              spent: Math.max(0, originalSpent - amount)
-            }).then(() => {
-              showToast('Target order cancelled. Charged amount refunded successfully!', 'success');
-            });
-          }
-        });
-      });
-    }
-
-    // Bootstrapping operations
     window.onload = () => {
-      // Theme matching
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-        document.getElementById('theme-icon').className = "fa-solid fa-sun text-lg";
-      } else {
-        document.documentElement.classList.remove('dark');
-        document.getElementById('theme-icon').className = "fa-solid fa-moon text-lg";
-      }
+      document.getElementById('app-screen').classList.add('hidden');
+      document.getElementById('login-screen').classList.remove('hidden');
+      generateLeaderboard();
     };
   </script>
 </body>
