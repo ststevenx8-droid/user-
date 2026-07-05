@@ -183,7 +183,7 @@
         </button>
 
         <div class="text-center pt-2">
-          <p class="text-xs text-slate-500">Don't have an account? <a href="#" onclick="showToast('Registration is currently closed by Admin!')" class="text-blue-400 font-bold hover:underline">Request Access</a></p>
+          <p class="text-xs text-slate-500">Don't have an account? <a href="#" onclick="showToast('Registration is currently closed!')" class="text-blue-400 font-bold hover:underline">Request Access</a></p>
         </div>
       </div>
     </div>
@@ -231,7 +231,7 @@
 
       <!-- DUAL HELP SUPPORT BOX -->
       <div class="p-4 border-t border-slate-800">
-        <div class="bg-gradient-to-br from-indigo-900 to-slate-950 p-4 rounded-2xl shadow-lg relative overflow-hidden font-sans">
+        <div class="bg-gradient-to-br from-slate-900 to-slate-950 p-4 rounded-2xl shadow-lg border border-slate-800/80 relative overflow-hidden font-sans">
           <h4 class="text-xs font-black text-slate-400 uppercase tracking-wider text-center mb-3">Live Help Center</h4>
           
           <div class="grid grid-cols-2 gap-2">
@@ -448,7 +448,7 @@
           </div>
         </div>
 
-        <!-- VIEW: ACCOUNT (FIXED PROFILE PIC HEIGHT CLASS TYPO) -->
+        <!-- VIEW: ACCOUNT -->
         <div id="view-account" class="hidden space-y-6">
           <div>
             <h2 class="text-xl md:text-2xl font-black tracking-tight"><i class="fa-regular fa-user text-blue-500"></i> Account Center</h2>
@@ -460,7 +460,6 @@
             <div class="lg:col-span-8 bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm space-y-6 backdrop-blur-md">
               <div class="flex flex-col sm:flex-row items-center gap-5 border-b border-slate-100 dark:border-slate-800/50 pb-5">
                 <div class="relative group">
-                  <!-- Fixed Profile Image Height Class from h-120 to h-20 -->
                   <img id="acc-avatar-img" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80" alt="User Profile" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover ring-4 ring-blue-500/20">
                   <label for="avatar-upload" class="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center text-white text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-all cursor-pointer">
                     Change <i class="fa-solid fa-camera ml-1"></i>
@@ -602,7 +601,7 @@
               </div>
 
               <!-- Premium copyable bKash card -->
-              <div class="bg-gradient-to-r from-[#E2125D] to-[#F12B7C] p-6 rounded-2xl text-white relative overflow-hidden shadow-lg shadow-pink-500/15 font-sans">
+              <div class="bg-gradient-to-r from-[#E2125D] to-[#F12B7C] p-6 rounded-2xl text-white relative overflow-hidden shadow-lg shadow-pink-500/15">
                 <div class="absolute -right-8 -bottom-8 w-24 h-24 bg-white/5 rounded-full blur-xl"></div>
                 <div class="space-y-4">
                   <div class="flex justify-between items-center text-[10px] uppercase font-bold tracking-widest text-pink-100">
@@ -724,10 +723,9 @@
                   <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Description</label>
                   <textarea id="ticket-msg" required rows="4" placeholder="Briefly describe your request" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 text-xs focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
                 </div>
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-2xl text-xs transition-all shadow-md font-sans">Create Ticket</button>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-2xl text-xs transition-all shadow-md">Create Ticket</button>
               </form>
             </div>
-            
             <div class="lg:col-span-7 bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm overflow-hidden backdrop-blur-md space-y-6">
               <div class="space-y-3" id="tickets-history-container">
                 <div class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-slate-150 dark:border-slate-800 flex justify-between items-center">
@@ -1092,7 +1090,7 @@
       renderTable();
     }
 
-    // GOOGLE LOGIN PROCESS
+    // GOOGLE LOGIN PROCESS (FIXED SYNTAX TYPOS)
     function handleGoogleLogin() {
       const googlePopup = document.getElementById('google-loading-popup');
       googlePopup.classList.remove('hidden');
@@ -1195,7 +1193,7 @@
       `;
       container.prepend(ticketDiv);
 
-      showToast(`Support ticket #${ticketId} created successfully!`);
+      showToast('Support ticket #' + ticketId + ' created successfully!');
       document.getElementById('ticket-subject').value = '';
       document.getElementById('ticket-msg').value = '';
     }
@@ -1210,7 +1208,7 @@
       }
     }
 
-    // ADD FUNDS SUBMISSION
+    // ADD FUNDS SUBMISSION WITH INTERACTIVE SIMULATED PENDING SYSTEM
     function handleTransactionSubmit(event) {
       event.preventDefault();
       
@@ -1239,7 +1237,7 @@
           <td class="py-4 px-4 font-mono font-bold text-slate-500">${txId}</td>
           <td class="py-4 px-4">Today</td>
           <td class="py-4 px-4">${senderNum}</td>
-          <td class="py-4 px-4 font-bold text-slate-700 dark:text-slate-300">৳${amount.toFixed(2)} BDT</td>
+          <td class="py-4 px-4 font-bold text-slate-700 dark:text-slate-300">৳${amount.toFixed(2)}</td>
           <td class="py-4 px-4" id="tx-status-cell-${txId}">
             <div class="flex items-center gap-2">
               <span class="bg-amber-100 text-amber-600 px-2 py-1 rounded-full font-bold text-[10px] animate-pulse">Pending</span>
@@ -1256,7 +1254,7 @@
         btnText.classList.remove('hidden');
         spinner.classList.add('hidden');
 
-        showToast(`৳${amount.toFixed(2)} BDT পেমেন্ট রিকোয়েস্ট পেন্ডিং! আপনি নিচে ম্যানুয়ালি "Approve" বাটনে ক্লিক না করা পর্যন্ত এটি পেন্ডিং থাকবে।`);
+        showToast('৳' + amount.toFixed(2) + ' BDT পেমেন্ট রিকোয়েস্ট পেন্ডিং! আপনি নিচে ম্যানুয়ালি "Approve" বাটনে ক্লিক না করা পর্যন্ত এটি পেন্ডিং থাকবে।');
         
         // Reset input fields
         document.getElementById('tx-sender').value = '';
@@ -1266,7 +1264,7 @@
       }, 1000);
     }
 
-    // MANUAL APPROVE DEPOSIT ACTION (Will not approve until user clicks)
+    // MANUAL APPROVE DEPOSIT ACTION
     function approveDeposit(txId, amount) {
       const statusCell = document.getElementById(`tx-status-cell-${txId}`);
       if (statusCell) {
@@ -1276,7 +1274,7 @@
         walletState.balance += amount;
         updateStatsUI();
         
-        showToast(`৳${amount.toFixed(2)} BDT পেমেন্ট সফলভাবে অ্যাপ্রুভ করা হয়েছে এবং মেইন ব্যালেন্সে যোগ হয়েছে!`);
+        showToast('৳' + amount.toFixed(2) + ' BDT পেমেন্ট সফলভাবে অ্যাপ্রুভ করা হয়েছে এবং মেইন ব্যালেন্সে যোগ হয়েছে!');
       }
     }
 
@@ -1296,7 +1294,6 @@
       }
     }
 
-    // CLOSE NEW ORDER MODAL
     function closeOrderModal() {
       document.getElementById('order-modal').classList.add('hidden');
     }
@@ -1327,7 +1324,6 @@
       }
     }
 
-    // CALCULATE MOCK BILL AND SUB-TOTALS
     function calculateCost() {
       const srvId = parseInt(document.getElementById('modal-service').value);
       const srv = services.find(s => s.id === srvId);
@@ -1411,13 +1407,38 @@
       `;
       orderBody.prepend(newRow);
 
-      showToast(`অর্ডার সফলভাবে সম্পন্ন হয়েছে! ID: #${orderId} (মূল্য: ৳${finalCost.toFixed(2)})`);
+      showToast('অর্ডার সফলভাবে সম্পন্ন হয়েছে! ID: #' + orderId + ' (মূল্য: ৳' + finalCost.toFixed(2) + ')');
       
       document.getElementById('modal-link').value = '';
       document.getElementById('modal-quantity').value = '';
       document.getElementById('modal-cost').value = '0.00';
       
       closeOrderModal();
+    }
+
+    function copyNumber(number) {
+      navigator.clipboard.writeText(number).then(() => {
+        showToast(`Number ${number} Copied!`);
+      });
+    }
+
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('-translate-x-full');
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const themeIcon = document.getElementById('theme-icon');
+      if(html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        themeIcon.className = "fa-solid fa-moon text-lg";
+        showToast('Light Mode ☀️');
+      } else {
+        html.classList.add('dark');
+        themeIcon.className = "fa-solid fa-sun text-lg";
+        showToast('Dark Mode 🌙');
+      }
     }
 
     window.onload = () => {
