@@ -1,1491 +1,1964 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STEVENX - SMM Panel</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        :root {
-            --sidebar-purple: #7963CD;
-            --blue-flame-start: #00d2ff;
-            --blue-flame-end: #3a7bd5;
-            --dark-bg: #0d0e12;
-            --card-bg: #161823;
-            --border-color: #242838;
-            --text-glow: 0 0 10px rgba(0, 210, 255, 0.5);
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ST STEVENX - Premium BDT SMM Panel</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              deep: '#060913',
+              cardDark: '#0E1527',
+              accent: '#3B82F6',
+              purple: '#6366F1',
+              bkash: '#E2125D'
+            }
+          }
         }
+      }
+    }
+  </script>
+  <!-- FontAwesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Firebase Compatibility Libraries -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
-        body {
-            background-color: var(--dark-bg);
-            color: #f0f2f5;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
-            margin: 0;
-            padding: 0;
-        }
+  <style>
+    /* Premium Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: #334155;
+    }
 
-        /* Live Floating Background Canvas */
-        #live-bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        /* Blue Flame Glowing Accents */
-        .text-blue-flame {
-            background: linear-gradient(45deg, var(--blue-flame-start), var(--blue-flame-end));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: bold;
-            text-shadow: var(--text-glow);
-        }
-
-        .btn-blue-flame {
-            background: linear-gradient(45deg, var(--blue-flame-start), var(--blue-flame-end));
-            color: #fff;
-            border: none;
-            transition: all 0.3s ease;
-        }
-
-        .btn-blue-flame:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.4);
-            color: #fff;
-        }
-
-        /* Purple Sidebar Style */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -270px;
-            width: 260px;
-            height: 100%;
-            background-color: var(--sidebar-purple);
-            transition: left 0.3s ease;
-            z-index: 1040;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding-bottom: 20px;
-            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.3);
-        }
-
-        .sidebar.active {
-            left: 0;
-        }
-
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            display: none;
-            z-index: 1030;
-        }
-
-        .sidebar-overlay.active {
-            display: block;
-        }
-
-        /* Sidebar Navigation Items */
-        .sidebar-menu {
-            margin-top: 15px;
-        }
-
-        .nav-menu-item {
-            padding: 10px 18px;
-            color: rgba(255, 255, 255, 0.85);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            border-radius: 6px;
-            margin: 3px 12px;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .nav-menu-item i {
-            margin-right: 12px;
-            width: 18px;
-            text-align: center;
-            font-size: 15px;
-        }
-
-        /* Sidebar Item Hover States */
-        .nav-menu-item:hover {
-            color: #fff;
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Active Item styling */
-        .nav-menu-item.active {
-            background-color: #ffffff !important;
-            color: #1a1a1a !important;
-            font-weight: 600;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-        }
-
-        .nav-menu-item.active i {
-            color: #1a1a1a !important;
-        }
-
-        /* Floating Circular Telegram Button */
-        .telegram-float-btn {
-            width: 50px;
-            height: 50px;
-            background-color: #0088cc;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            text-decoration: none;
-            margin-left: 20px;
-            box-shadow: 0 4px 12px rgba(0, 136, 204, 0.4);
-            transition: all 0.3s ease;
-        }
-
-        .telegram-float-btn:hover {
-            transform: scale(1.08);
-            color: #fff;
-            box-shadow: 0 6px 16px rgba(0, 136, 204, 0.6);
-        }
-
-        /* Auth Screen */
-        #authScreen {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .auth-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            width: 100%;
-            max-width: 420px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            backdrop-filter: blur(8px);
-        }
-
-        /* Dashboard & Content Pages */
-        #appDashboard {
-            display: none;
-        }
-
-        .content-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-            backdrop-filter: blur(6px);
-        }
-
-        .page-view {
-            display: none;
-        }
-
-        /* Toast notifications */
-        #toastContainer {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1060;
-        }
-
-        .custom-toast {
-            background-color: var(--card-bg);
-            color: #fff;
-            border-left: 4px solid var(--blue-flame-start);
-            padding: 12px 16px;
-            border-radius: 6px;
-            margin-top: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-            border-right: 1px solid var(--border-color);
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .table-dark {
-            --bs-table-bg: #161823;
-            --bs-table-border-color: #242838;
-        }
-    </style>
+    /* Premium Blue Badge Glow Animation */
+    @keyframes premium-glow {
+      0%, 100% { filter: drop-shadow(0 0 2px rgba(59, 130, 246, 0.6)); transform: scale(1); }
+      50% { filter: drop-shadow(0 0 10px rgba(59, 130, 246, 1)); transform: scale(1.08); }
+    }
+    .premium-badge-glow {
+      animation: premium-glow 2s infinite ease-in-out;
+    }
+  </style>
 </head>
-<body>
+<body class="bg-[#F8FAFC] dark:bg-brand-deep text-slate-800 dark:text-slate-200 font-sans transition-colors duration-200 overflow-x-hidden relative font-medium">
 
-    <!-- HTML5 Live Background Canvas -->
-    <canvas id="live-bg-canvas"></canvas>
+  <!-- ================= HIGH PERFORMANCE CANVAS PHYSICS & LIGHTING BG ================= -->
+  <canvas id="live-lighting-canvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
 
-    <!-- Toast Notifications Container -->
-    <div id="toastContainer"></div>
+  <!-- ================= GOOGLE AUTHENTICATION LOADING POPUP ================= -->
+  <div id="google-loading-popup" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden">
+    <div class="bg-[#0E1527] border border-slate-800 rounded-3xl p-8 max-w-sm w-full text-center space-y-4">
+      <div class="relative inline-block">
+        <div class="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent"></div>
+        <img src="https://www.vectorlogo.zone/logos/google/google-icon.svg" class="w-7 h-7 absolute top-4 left-4" alt="Google Logo">
+      </div>
+      <h3 class="text-sm font-extrabold text-white tracking-wide">Connecting Google Accounts...</h3>
+      <p class="text-[10px] text-slate-400">অনুগ্রহ করে অপেক্ষা করুন, গুগল সিকিউরড লগইন প্রসেস করা হচ্ছে।</p>
+    </div>
+  </div>
 
-    <!-- AUTHENTICATION SCREEN -->
-    <div id="authScreen">
-        <div class="auth-card">
-            <h3 class="text-center mb-4 text-blue-flame">STEVENX</h3>
-            <h5 class="text-center mb-4 text-light" id="authModeText">Sign In</h5>
-            <form id="authForm" onsubmit="handleAuthSubmit(event)">
-                <div class="mb-3">
-                    <label class="form-label text-muted" id="userFieldLabel">Username or Email</label>
-                    <input type="text" class="form-control bg-dark text-white border-secondary" id="authUsername" required>
-                </div>
-                <div class="mb-3 text-start" id="signUpEmailContainer" style="display: none;">
-                    <label class="form-label text-muted">Email Address</label>
-                    <input type="email" class="form-control bg-dark text-white border-secondary" id="authEmail">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label text-muted">Password</label>
-                    <input type="password" class="form-control bg-dark text-white border-secondary" id="authPassword" required>
-                </div>
-                <div class="mb-3 text-start" id="signUpReferralContainer" style="display: none;">
-                    <label class="form-label text-muted">Referral Code (Optional)</label>
-                    <input type="text" class="form-control bg-dark text-white border-secondary" id="authReferralInput">
-                </div>
-                <button type="submit" class="btn btn-blue-flame w-100 mb-3 text-uppercase font-weight-bold" id="authMainBtn">Sign In</button>
-                <button type="button" class="btn btn-outline-light w-100 mb-3" onclick="handleGoogleLogin()">
-                    <i class="fab fa-google me-2"></i> Continue with Google
+  <!-- ================= PROFESSIONAL SPLIT-SCREEN LOGIN SCREEN ================= -->
+  <div id="login-screen" class="fixed inset-0 z-50 flex h-screen w-screen bg-brand-deep text-white overflow-hidden font-sans">
+    
+    <!-- Left Side: SMM Branding / Promo (Visible on large screens) -->
+    <div class="hidden lg:flex w-1/2 flex-col justify-between p-12 bg-gradient-to-br from-blue-700 via-indigo-950 to-brand-deep relative overflow-hidden">
+      <div class="absolute -top-24 -left-24 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
+      <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl"></div>
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3 relative z-10">
+        <div class="bg-white text-blue-600 p-2.5 rounded-2xl font-black text-2xl shadow-lg">ST</div>
+        <div>
+          <h1 class="font-extrabold text-xl leading-none tracking-wide text-white">ST STEVENX</h1>
+          <span class="text-[10px] text-blue-400 block font-medium">Boost Your Social Presence</span>
+        </div>
+      </div>
+
+      <!-- Feature Highlights -->
+      <div class="space-y-8 relative z-10 max-w-md my-auto font-sans">
+        <h2 class="text-3xl font-black tracking-tight leading-tight">Elevate Your Social Media Success Instantly</h2>
+        <div class="space-y-4 text-slate-300">
+          <div class="flex items-start gap-3.5">
+            <span class="bg-white/10 p-2 rounded-xl text-blue-400"><i class="fa-solid fa-bolt text-sm"></i></span>
+            <div>
+              <h4 class="text-sm font-bold text-white font-sans">Instant Order Delivery</h4>
+              <p class="text-xs text-slate-400 mt-0.5">আমাদের সার্ভিসগুলো অর্ডার করার সাথে সাথেই কাজ শুরু করে দেয়।</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3.5">
+            <span class="bg-white/10 p-2 rounded-xl text-blue-400"><i class="fa-solid fa-shield-halved text-sm"></i></span>
+            <div>
+              <h4 class="text-sm font-bold text-white">100% Safe & Secure Payments</h4>
+              <p class="text-xs text-slate-400 mt-0.5">বিকাশ পার্সোনাল সেন্ড মানি সিস্টেমে নিরাপদ লেনদেনের সুবিধা।</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3.5">
+            <span class="bg-white/10 p-2 rounded-xl text-blue-400"><i class="fa-brands fa-telegram text-sm"></i></span>
+            <div>
+              <h4 class="text-sm font-bold text-white">24/7 Dedicated Support</h4>
+              <p class="text-xs text-slate-400 mt-0.5">টেলিগ্রাম সাপোর্টের মাধ্যমে যেকোনো প্রশ্নের দ্রুত সমাধান নিশ্চিত করি।</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Info -->
+      <div class="text-xs text-slate-400 relative z-10">
+        &copy; 2026 ST STEVENX. All Rights Reserved.
+      </div>
+    </div>
+
+    <!-- Right Side: Clean Login Form -->
+    <div class="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 sm:p-12 bg-brand-deep relative font-sans">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(99,102,241,0.06),transparent_50%)]"></div>
+      
+      <div class="w-full max-w-md space-y-5 relative z-10">
+        <!-- Mobile Logo -->
+        <div class="text-center lg:text-left mb-6 lg:hidden">
+          <div class="inline-flex bg-blue-600 p-2.5 rounded-2xl text-white font-black text-xl tracking-tight mb-2">ST</div>
+          <h2 class="text-xl font-black text-white">ST STEVENX</h2>
+        </div>
+
+        <div>
+          <h3 class="text-2xl font-black tracking-tight text-white">Sign In to Dashboard</h3>
+          <p class="text-xs text-slate-400 mt-1">আপনার রেজিস্টার্ড ইমেইল ও পাসওয়ার্ড দিয়ে ড্যাশবোর্ডটি ওপেন করুন।</p>
+        </div>
+
+        <form onsubmit="handleLogin(event)" class="space-y-4 pt-2">
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Email Address</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500"><i class="fa-regular fa-envelope"></i></span>
+              <input type="email" id="login-email" required placeholder="name@domain.com" class="w-full bg-slate-900/60 border border-slate-800/80 rounded-xl py-3.5 pl-11 pr-4 text-xs font-semibold text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Password</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500"><i class="fa-solid fa-lock"></i></span>
+              <input type="password" id="login-password" required placeholder="Your Password" class="w-full bg-slate-900/60 border border-slate-800/80 rounded-xl py-3.5 pl-11 pr-11 text-xs font-semibold text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+              <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-500 hover:text-white">
+                <i id="password-toggle-icon" class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between text-[11px] text-slate-400 font-sans">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" checked class="rounded bg-slate-900 border-slate-800 text-blue-500 focus:ring-0"> Remember Me
+            </label>
+            <a href="#" onclick="showToast('Password reset functionality integrated through email!')" class="hover:text-blue-500 transition-colors">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-3.5 px-6 rounded-xl text-xs transition-all shadow-lg shadow-blue-500/10 flex items-center justify-center gap-2 mt-2">
+            Sign In <i class="fa-solid fa-arrow-right-to-bracket"></i>
+          </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="flex items-center my-2">
+          <div class="flex-grow border-t border-slate-800/80"></div>
+          <span class="mx-3 text-[10px] text-slate-500 font-bold uppercase tracking-wider">Or</span>
+          <div class="flex-grow border-t border-slate-800/80"></div>
+        </div>
+
+        <!-- Google Sign-In Button -->
+        <button type="button" onclick="handleGoogleLogin()" class="w-full bg-white hover:bg-slate-50 text-slate-900 font-bold py-3.5 px-6 rounded-xl text-xs transition-all flex items-center justify-center shadow-md shadow-black/15 gap-2">
+          <img src="https://www.vectorlogo.zone/logos/google/google-icon.svg" class="w-4.5 h-4.5" alt="Google Logo"> Continue with Google
+        </button>
+
+        <div class="text-center pt-2">
+          <p class="text-xs text-slate-500">Don't have an account? <a href="#" onclick="openRegisterModal()" class="text-blue-400 font-bold hover:underline">Register Now</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ================= APP WRAPPER ================= -->
+  <div id="app-screen" class="hidden flex h-screen overflow-hidden relative z-10">
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-brand-deep/90 border-r border-slate-800/50 text-white flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out backdrop-blur-md">
+      <!-- Logo and Subtitle -->
+      <div class="p-6 border-b border-slate-800 flex items-center gap-3">
+        <div class="bg-blue-600 p-2.5 rounded-lg text-white font-black text-xl tracking-tight">ST</div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight tracking-wide">ST STEVENX</h1>
+          <span class="text-[10px] text-blue-400 block font-medium">Boost Your Social Presence</span>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="flex-1 overflow-y-auto px-4 py-6 space-y-1">
+        <button id="nav-dashboard" onclick="switchTab('dashboard')" class="nav-btn w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all bg-blue-600 text-white">
+          <i class="fa-solid fa-chart-line text-lg w-5 text-center"></i> Dashboard
+        </button>
+        <button id="nav-orders" onclick="switchTab('orders')" class="nav-btn w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+          <i class="fa-solid fa-list-check text-lg w-5 text-center"></i> Orders History
+        </button>
+        <button id="nav-add-funds" onclick="switchTab('add-funds')" class="nav-btn w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+          <i class="fa-solid fa-wallet text-lg w-5 text-center"></i> Add Funds
+        </button>
+        <button id="nav-tickets" onclick="switchTab('tickets')" class="nav-btn w-full flex items-center justify-between gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+          <span class="flex items-center gap-3">
+            <i class="fa-regular fa-comments text-lg w-5 text-center"></i> Support Tickets
+          </span>
+          <span class="bg-blue-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">New</span>
+        </button>
+        <button id="nav-account" onclick="switchTab('account')" class="nav-btn w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+          <i class="fa-regular fa-user text-lg w-5 text-center"></i> My Account
+        </button>
+        <button onclick="handleLogout()" class="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all text-rose-400 hover:text-rose-300 hover:bg-rose-950/20">
+          <i class="fa-solid fa-arrow-right-from-bracket text-lg w-5 text-center"></i> Log Out
+        </button>
+      </nav>
+
+      <!-- DEBUG MODE: ADMIN PANEL TOGGLE -->
+      <div class="px-4 py-2 border-t border-slate-800">
+        <button id="admin-mode-btn" onclick="toggleAdminView()" class="w-full bg-amber-600/20 border border-amber-500/30 text-amber-400 hover:bg-amber-600/30 font-bold py-2.5 px-4 rounded-xl text-xs transition-all flex items-center justify-center gap-2">
+          <i class="fa-solid fa-user-shield"></i> Open Admin Panel
+        </button>
+      </div>
+
+      <!-- DUAL HELP SUPPORT BOX -->
+      <div class="p-4 border-t border-slate-800">
+        <div class="bg-gradient-to-br from-indigo-900 to-slate-950 p-4 rounded-2xl shadow-lg relative overflow-hidden font-sans">
+          <h4 class="text-xs font-black text-slate-400 uppercase tracking-wider text-center mb-3">Live Help Center</h4>
+          
+          <div class="grid grid-cols-2 gap-2">
+            <a href="https://t.me/kaisarvai007" target="_blank" class="flex flex-col items-center justify-center bg-blue-950/40 hover:bg-blue-900/30 border border-blue-900/40 p-2.5 rounded-xl transition-all">
+              <i class="fa-brands fa-telegram text-blue-400 text-xl mb-1"></i>
+              <span class="text-[9px] font-bold text-white leading-none">Telegram</span>
+              <span class="text-[7px] text-slate-400 mt-1 truncate w-full text-center">@kaisarvai007</span>
+            </a>
+            <a href="https://wa.me/8801860909272" target="_blank" class="flex flex-col items-center justify-center bg-emerald-950/40 hover:bg-emerald-900/30 border border-emerald-900/40 p-2.5 rounded-xl transition-all">
+              <i class="fa-brands fa-whatsapp text-emerald-400 text-xl mb-1"></i>
+              <span class="text-[9px] font-bold text-white leading-none">WhatsApp</span>
+              <span class="text-[7px] text-slate-400 mt-1 truncate w-full text-center">01860909272</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <div class="flex-1 flex flex-col h-full overflow-y-auto lg:pl-64">
+
+      <!-- HEADER -->
+      <header class="bg-white/80 dark:bg-brand-deep/80 border-b border-slate-100 dark:border-slate-800/40 py-4 px-6 flex items-center justify-between sticky top-0 z-40 backdrop-blur-md transition-colors duration-200">
+        <div class="flex items-center gap-4">
+          <button onclick="toggleMobileSidebar()" class="lg:hidden text-slate-600 dark:text-slate-300 focus:outline-none">
+            <i class="fa-solid fa-bars text-xl"></i>
+          </button>
+          <button onclick="openOrderModal()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded-xl flex items-center gap-2 shadow-sm transition-all">
+            <i class="fa-solid fa-plus"></i> New Order
+          </button>
+        </div>
+
+        <div class="flex items-center gap-6">
+          <button onclick="toggleTheme()" class="text-slate-600 dark:text-slate-300 hover:text-blue-500 transition-all">
+            <i id="theme-icon" class="fa-solid fa-moon text-lg"></i>
+          </button>
+
+          <div class="relative cursor-pointer hover:scale-105 transition-transform" onclick="showToast('No new notifications!')">
+            <i class="fa-regular fa-bell text-xl text-slate-600 dark:text-slate-300"></i>
+            <span class="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[9px] font-bold w-4.5 h-4.5 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900">3</span>
+          </div>
+
+          <!-- User Display with Verified Badge in Header -->
+          <div class="flex items-center gap-3 border-l border-slate-100 dark:border-slate-800 pl-4 cursor-pointer" onclick="switchTab('account')">
+            <img id="header-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80" alt="User Profile" class="w-9 h-9 rounded-full object-cover ring-2 ring-blue-500/20">
+            <div class="hidden sm:block">
+              <div class="flex items-center gap-1">
+                <h3 id="header-user-display" class="text-xs font-bold leading-none text-slate-800 dark:text-slate-200">Loading...</h3>
+                <!-- Starburst Verified Blue Badge -->
+                <span id="badge-header-container" class="hidden">
+                  <svg class="w-3.5 h-3.5 text-blue-500 inline-block align-middle shrink-0 premium-badge-glow" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M23 12l-2.44-2.78.34-3.68-3.61-.82-1.89-3.18L12 3 8.6 1.54 6.71 4.72l-3.61.81.34 3.68L1 12l2.44 2.78-.34 3.69 3.61.82 1.89 3.18L12 21l3.4 1.46 1.89-3.18 3.61-.82-.34-3.68L23 12zm-13 5l-4-4 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                </span>
+              </div>
+              <span id="header-username-display" class="text-[9px] text-slate-400 font-semibold block mt-0.5">@loading</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- MAIN WRAPPER -->
+      <main class="p-6 max-w-[1400px] mx-auto w-full relative z-10">
+
+        <!-- VIEW: DASHBOARD -->
+        <div id="view-dashboard" class="space-y-6">
+          
+          <!-- MISSION / PROGRESS CARD -->
+          <div id="mission-warning-card" class="bg-gradient-to-r from-blue-900/60 to-indigo-950/60 border border-blue-800/40 p-5 rounded-2xl backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <span class="bg-blue-500/20 text-blue-400 p-3 rounded-xl text-lg animate-pulse"><i class="fa-solid fa-gift"></i></span>
+              <div>
+                <h4 class="text-xs font-bold text-white uppercase tracking-wider">🌟 Star Status Challenge</h4>
+                <p class="text-[11px] text-slate-300 mt-1">৳১০০.০০ স্পেন্ড করলেই পাবেন প্রিমিয়াম ভেরিফাইড গ্লোয়িং ব্লু ব্যাজ এবং প্রতি অর্ডারে সাথে সাথে ৳১০.০০ ইনস্ট্যান্ট ডিসকাউন্ট!</p>
+              </div>
+            </div>
+            <div class="w-full md:w-64 space-y-1.5">
+              <div class="flex justify-between text-[10px] text-slate-400 font-bold">
+                <span>Progress: <span id="mission-progress-text">৳0.00</span> / ৳100.00</span>
+                <span id="mission-percentage">0%</span>
+              </div>
+              <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden">
+                <div id="mission-progress-bar" class="h-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-300" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- GREETINGS -->
+          <div>
+            <h2 class="text-xl md:text-2xl font-black tracking-tight flex items-center gap-1.5">
+              Welcome back, <span id="welcome-user-display" class="text-blue-500">Loading...</span>
+              <span id="badge-welcome-container" class="hidden">
+                <svg class="w-5 h-5 text-blue-500 inline-block align-middle premium-badge-glow" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23 12l-2.44-2.78.34-3.68-3.61-.82-1.89-3.18L12 3 8.6 1.54 6.71 4.72l-3.61.81.34 3.68L1 12l2.44 2.78-.34 3.69 3.61.82 1.89 3.18L12 21l3.4 1.46 1.89-3.18 3.61-.82-.34-3.68L23 12zm-13 5l-4-4 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+              </span> 👋
+            </h2>
+            <p class="text-xs text-slate-400 mt-1">Here's what's happening with your account today.</p>
+          </div>
+
+          <!-- STATS CARDS -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Account Balance Card -->
+            <div class="bg-white dark:bg-[#0E1527]/90 p-5 rounded-2xl shadow-sm border border-slate-150 dark:border-slate-800/40 flex items-center justify-between backdrop-blur-md">
+              <div>
+                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Account Balance</span>
+                <span id="stat-balance" class="text-xl font-extrabold mt-1 block text-blue-500">৳0.00</span>
+                <button onclick="switchTab('add-funds')" class="text-[10px] text-blue-500 hover:underline mt-1 block font-semibold text-left"><i class="fa-solid fa-plus-circle"></i> Add Balance</button>
+              </div>
+              <div class="bg-blue-50 dark:bg-blue-950/20 text-blue-500 p-3.5 rounded-2xl">
+                <i class="fa-solid fa-wallet text-xl"></i>
+              </div>
+            </div>
+            <!-- Total Spent Card -->
+            <div class="bg-white dark:bg-[#0E1527]/90 p-5 rounded-2xl shadow-sm border border-slate-150 dark:border-slate-800/40 flex items-center justify-between backdrop-blur-md">
+              <div>
+                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Total Spent</span>
+                <span id="stat-spent" class="text-xl font-extrabold mt-1 block">৳0.00</span>
+              </div>
+              <div class="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-500 p-3.5 rounded-2xl">
+                <i class="fa-solid fa-arrow-trend-up text-xl"></i>
+              </div>
+            </div>
+            <!-- Total Orders Card -->
+            <div class="bg-white dark:bg-[#0E1527]/90 p-5 rounded-2xl shadow-sm border border-slate-150 dark:border-slate-800/40 flex items-center justify-between backdrop-blur-md">
+              <div>
+                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Total Orders</span>
+                <span id="stat-orders" class="text-xl font-extrabold mt-1 block">0</span>
+              </div>
+              <div class="bg-indigo-50 dark:bg-indigo-950/40 text-indigo-500 p-3.5 rounded-2xl">
+                <i class="fa-solid fa-basket-shopping text-xl"></i>
+              </div>
+            </div>
+            <!-- Pending Orders Card -->
+            <div class="bg-white dark:bg-[#0E1527]/90 p-5 rounded-2xl shadow-sm border border-slate-150 dark:border-slate-800/40 flex items-center justify-between font-medium backdrop-blur-md">
+              <div>
+                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Pending Orders</span>
+                <span id="stat-pending" class="text-xl font-extrabold mt-1 block">0</span>
+              </div>
+              <div class="bg-amber-50 dark:bg-amber-950/40 text-amber-500 p-3.5 rounded-2xl">
+                <i class="fa-regular fa-clock text-xl"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Categories, Central Services & Right Leaderboard -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
+            
+            <!-- Left Side Categories -->
+            <div class="lg:col-span-2 bg-white dark:bg-[#0E1527]/90 rounded-2xl p-4 border border-slate-150 dark:border-slate-800/40 shadow-sm h-fit backdrop-blur-md">
+              <h3 class="text-xs font-bold tracking-tight mb-3 flex items-center gap-1.5 text-slate-400 uppercase"><i class="fa-solid fa-grip-vertical"></i> Categories</h3>
+              <div class="space-y-1" id="category-list">
+                <button onclick="filterCategory('All')" class="cat-btn w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-semibold bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400">
+                  <span class="flex items-center gap-1.5"><i class="fa-solid fa-globe text-xs w-4"></i> All</span>
                 </button>
-            </form>
-            <div class="text-center mt-3 small" id="toggleAuthText">
-                Don't have an account? <a href="#" class="text-blue-flame fw-bold" style="text-decoration:none;" id="toggleAuthLink" onclick="switchAuthMode(event)">Sign Up</a>
+                <button onclick="filterCategory('Telegram')" class="cat-btn w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                  <span class="flex items-center gap-1.5"><i class="fa-brands fa-telegram text-xs w-4 text-blue-500"></i> Telegram</span>
+                </button>
+                <button onclick="filterCategory('Instagram')" class="cat-btn w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                  <span class="flex items-center gap-1.5"><i class="fa-brands fa-instagram text-xs w-4 text-pink-500"></i> Instagram</span>
+                </button>
+                <button onclick="filterCategory('YouTube')" class="cat-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                  <span class="flex items-center gap-2"><i class="fa-brands fa-youtube text-sm w-5 text-red-500"></i> YouTube</span>
+                </button>
+                <button onclick="filterCategory('TikTok')" class="cat-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                  <span class="flex items-center gap-2"><i class="fa-brands fa-tiktok text-sm w-5 text-[#25F4EE]"></i> TikTok</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Central Services Table -->
+            <div class="lg:col-span-7 space-y-4">
+              <div class="flex flex-col sm:flex-row gap-3">
+                <div class="relative flex-1">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400 pointer-events-none"><i class="fa-solid fa-magnifying-glass text-xs"></i></span>
+                  <input type="text" id="service-search" placeholder="Search for a service..." class="w-full bg-white dark:bg-[#0E1527]/90 border border-slate-200 dark:border-slate-800/80 rounded-2xl py-3 pl-10 pr-4 text-xs font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:placeholder-slate-500 backdrop-blur-md" onkeyup="handleSearch()">
+                </div>
+              </div>
+
+              <div class="bg-white dark:bg-[#0E1527]/95 rounded-2xl border border-slate-100 dark:border-slate-800/40 shadow-sm overflow-hidden backdrop-blur-md">
+                <div class="overflow-x-auto overflow-y-hidden">
+                  <table class="w-full text-left border-collapse">
+                    <thead>
+                      <tr class="bg-slate-50/50 dark:bg-slate-900/40 text-slate-400 text-[10px] uppercase font-bold border-b border-slate-100 dark:border-slate-800/40">
+                        <th class="py-3 px-4">ID</th>
+                        <th class="py-3 px-4">Service Name</th>
+                        <th class="py-3 px-4">Rate / 1000 (BDT)</th>
+                        <th class="py-3 px-4 text-center">Min</th>
+                        <th class="py-3 px-4 text-center">Max</th>
+                        <th class="py-3 px-4 text-center">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="services-table-body" class="divide-y divide-slate-100 dark:divide-slate-800/40 text-xs"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column: TOP 20 LEADERBOARD -->
+            <div class="lg:col-span-3 space-y-6">
+              <div class="bg-white dark:bg-[#0E1527]/90 rounded-2xl p-5 border border-slate-150 dark:border-slate-800/40 shadow-sm backdrop-blur-md space-y-4 h-[580px] flex flex-col overflow-hidden">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5 shrink-0"><i class="fa-solid fa-trophy text-yellow-500"></i> Top 20 Leaderboard</h3>
+                <div id="leaderboard-container" class="flex-1 overflow-y-auto pr-1 space-y-2.5">
+                  <!-- Generated Dynamically by JS -->
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- VIEW: ACCOUNT -->
+        <div id="view-account" class="hidden space-y-6">
+          <div>
+            <h2 class="text-xl md:text-2xl font-black tracking-tight"><i class="fa-regular fa-user text-blue-500"></i> Account Center</h2>
+            <p class="text-xs text-slate-400 mt-1">আপনার প্রোফাইল ডিটেইলস, সিকিউরিটি এবং এপিআই অটোমেশন পরিচালনা করুন।</p>
+          </div>
+          
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-8 bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm space-y-6 backdrop-blur-md">
+              <div class="flex flex-col sm:flex-row items-center gap-5 border-b border-slate-100 dark:border-slate-800/50 pb-5">
+                <div class="relative group">
+                  <img id="acc-avatar-img" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80" alt="User Profile" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover ring-4 ring-blue-500/20">
+                  <label for="avatar-upload" class="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center text-white text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-all cursor-pointer">
+                    Change <i class="fa-solid fa-camera ml-1"></i>
+                  </label>
+                  <input type="file" id="avatar-upload" accept="image/*" class="hidden" onchange="uploadAvatar(event)">
+                </div>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <h3 id="acc-user-header" class="text-base font-extrabold text-slate-800 dark:text-white leading-none">Loading...</h3>
+                    <span id="badge-account-container" class="hidden">
+                      <svg class="w-4 h-4 text-blue-500 fill-current inline-block align-middle shrink-0 premium-badge-glow" viewBox="0 0 24 24">
+                        <path d="M23 12l-2.44-2.78.34-3.68-3.61-.82-1.89-3.18L12 3 8.6 1.54 6.71 4.72l-3.61.81.34 3.68L1 12l2.44 2.78-.34 3.69 3.61.82 1.89 3.18L12 21l3.4 1.46 1.89-3.18 3.61-.82-.34-3.68L23 12zm-13 5l-4-4 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                      </svg>
+                    </span>
+                  </div>
+                  <span id="acc-username-header" class="text-xs text-slate-400 font-semibold block mt-1">@username</span>
+                  <div class="flex gap-2 mt-2.5">
+                    <span class="bg-emerald-50 dark:bg-emerald-950/25 text-emerald-500 text-[10px] font-black px-2 py-0.5 rounded-md border border-emerald-100/30">Verified User</span>
+                    <span class="bg-blue-50 dark:bg-blue-950/25 text-blue-500 text-[10px] font-black px-2 py-0.5 rounded-md border border-blue-100/30">Reseller Level 1</span>
+                  </div>
+                </div>
+              </div>
+
+              <form onsubmit="handleAccountUpdate(event)" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Display Name</label>
+                    <input type="text" id="acc-name" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-semibold focus:ring-2 focus:ring-blue-500 outline-none">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Username (@)</label>
+                    <div class="relative">
+                      <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500 font-bold">@</span>
+                      <input type="text" id="acc-username-field" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pl-8 pr-4 text-xs font-semibold focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Email Address</label>
+                    <input type="email" id="acc-email" readonly class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-semibold outline-none cursor-not-allowed">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Timezone</label>
+                    <select class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-semibold outline-none focus:ring-2 focus:ring-blue-500">
+                      <option>(UTC+06:00) Dhaka</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3 pt-2">
+                  <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-2xl text-xs shadow-md transition-all">Save Changes</button>
+                  <button type="button" onclick="handleLogout()" class="bg-rose-500 hover:bg-rose-600 text-white font-bold py-3 px-6 rounded-2xl text-xs shadow-md transition-all">Log Out</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- API Management & Security Status -->
+            <div class="lg:col-span-4 space-y-6">
+              <div class="bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm space-y-4 backdrop-blur-md">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
+                  <span>Developer API Key</span>
+                  <span class="inline-flex items-center gap-1 text-[10px] text-emerald-500 font-bold"><i class="fa-solid fa-circle text-[7px]"></i> Connected</span>
+                </h3>
+                <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2 overflow-hidden">
+                  <span id="api-key-text" class="text-[11px] font-mono font-bold text-slate-600 dark:text-slate-300 truncate">7a8b9c0d1e2f3g4h5i6j7k8l9m0n</span>
+                  <button onclick="copyApiKey()" class="text-blue-500 hover:text-blue-600 text-xs shrink-0 p-1"><i class="fa-regular fa-copy"></i></button>
+                </div>
+                <button onclick="regenerateApiKey()" class="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-800 dark:text-white font-bold py-2.5 px-4 rounded-xl text-xs transition-all"><i class="fa-solid fa-arrows-rotate mr-1"></i> Generate New Key</button>
+              </div>
+
+              <div class="bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm space-y-4 backdrop-blur-md">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-emerald-500"></i> Recent Activity Logs</h3>
+                <div class="space-y-3 text-[11px]">
+                  <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800/50 pb-2">
+                    <div>
+                      <h4 class="font-bold">Realtime Firebase Synced</h4>
+                      <span class="text-[9px] text-slate-400">Authenticated Safe Session</span>
+                    </div>
+                    <span class="text-emerald-500 font-black">Online</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW: ORDERS -->
+        <div id="view-orders" class="hidden space-y-6">
+          <div>
+            <h2 class="text-xl md:text-2xl font-black tracking-tight"><i class="fa-solid fa-list-check text-blue-500"></i> Orders Logs</h2>
+          </div>
+          <div class="bg-white dark:bg-[#0E1527]/90 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm overflow-hidden backdrop-blur-md">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="bg-slate-50 dark:bg-slate-900/40 text-slate-400 uppercase font-bold border-b border-slate-150 dark:border-slate-800/40">
+                    <th class="py-3 px-4">Order ID</th>
+                    <th class="py-3 px-4">Date</th>
+                    <th class="py-3 px-4">Service</th>
+                    <th class="py-3 px-4">Link</th>
+                    <th class="py-3 px-4">Quantity</th>
+                    <th class="py-3 px-4">Charge (BDT)</th>
+                    <th class="py-3 px-4">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="orders-log-table" class="divide-y divide-slate-100 dark:divide-slate-800/40">
+                  <tr id="empty-orders-row">
+                    <td colspan="7" class="py-6 text-center text-slate-400 font-medium">No order placed yet.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW: Add Funds -->
+        <div id="view-add-funds" class="hidden space-y-6">
+          <div>
+            <h2 class="text-xl md:text-2xl font-black tracking-tight flex items-center gap-2"><i class="fa-solid fa-wallet text-blue-500"></i> Payment Gateway</h2>
+            <p class="text-xs text-slate-400 mt-1">পেমেন্ট করার পর ট্রানজেকশন তথ্য নিচে সাবমিট করুন। পেমেন্ট ভেরিফাই করে ব্যালেন্স অ্যাড করা হবে।</p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 font-sans">
+            <!-- Left Side: Invoice details -->
+            <div class="lg:col-span-6 bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm space-y-5 backdrop-blur-md font-sans">
+              <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+                <div class="flex items-center gap-3">
+                  <img src="https://www.logo.wine/a/logo/BKash/BKash-Logo.wine.svg" class="h-10 w-auto object-contain dark:brightness-110 shrink-0" alt="bKash Official Logo">
+                  <div>
+                    <h3 class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Trusted Gateway</h3>
+                    <h4 class="text-xs font-extrabold text-slate-500 dark:text-slate-300">বিকাশ পার্সোনাল সেন্ড মানি</h4>
+                  </div>
+                </div>
+              </div>
+
+              <!-- copyable bKash card -->
+              <div class="bg-gradient-to-r from-[#E2125D] to-[#F12B7C] p-6 rounded-2xl text-white relative overflow-hidden shadow-lg shadow-pink-500/15">
+                <div class="absolute -right-8 -bottom-8 w-24 h-24 bg-white/5 rounded-full blur-xl"></div>
+                <div class="space-y-4">
+                  <div class="flex justify-between items-center text-[10px] uppercase font-bold tracking-widest text-pink-100">
+                    <span>bKash Personal Number</span>
+                    <span class="flex items-center gap-1"><i class="fa-solid fa-circle text-emerald-400 text-[6px]"></i> Active</span>
+                  </div>
+                  <div class="text-2xl md:text-3xl font-black tracking-widest block">01860909272</div>
+                  <div class="flex items-center justify-between">
+                    <button onclick="copyNumber('01860909272')" class="bg-white text-[#E2125D] hover:bg-pink-50 text-[11px] font-black px-4 py-2 rounded-xl transition-all shadow flex items-center gap-1.5"><i class="fa-regular fa-copy"></i> Copy Number</button>
+                    <span class="text-[10px] font-medium text-pink-100">Send Money Only</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-3 pt-2 text-[11px]">
+                <div class="flex items-start gap-2 text-rose-500 bg-rose-50 dark:bg-rose-950/25 p-3 rounded-xl border border-rose-100/50">
+                  <i class="fa-solid fa-triangle-exclamation mt-0.5 shrink-0"></i>
+                  <p class="leading-relaxed"><strong>সাবধানতা:</strong> নূন্যতম ডিপোজিট ১০০ টাকা। এর নিচে পেমেন্ট করলে ব্যালেন্স যুক্ত হবে না। ক্যাশ আউট বা রিচার্জ গ্রহণ করা হয় না।</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Side: Submission Form -->
+            <div class="lg:col-span-6 bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm space-y-4 backdrop-blur-md">
+              <h3 class="text-sm font-extrabold text-slate-800 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-2"><i class="fa-solid fa-receipt text-blue-500"></i> Submit Deposit Information</h3>
+              
+              <form id="deposit-submit-form" onsubmit="handleTransactionSubmit(event)" class="space-y-4">
+                <div>
+                  <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Sender bKash Number</label>
+                  <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500"><i class="fa-solid fa-mobile-screen-button"></i></span>
+                    <input type="text" id="tx-sender" required placeholder="018XXXXXXXX" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3.5 pl-11 pr-4 text-xs font-semibold focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Paid Amount (BDT)</label>
+                    <div class="relative">
+                      <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500 font-bold text-[10px]">৳</span>
+                      <input type="number" id="tx-amount" required placeholder="Ex: 500" oninput="calculateAddFundsConversion()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3.5 pl-8 pr-4 text-xs font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Net Balance Added (BDT)</label>
+                    <div class="relative">
+                      <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-blue-500 font-black text-xs">৳</span>
+                      <input type="text" id="tx-converted-usd" readonly placeholder="0.00" class="w-full bg-slate-100 dark:bg-slate-800 border border-transparent rounded-xl py-3.5 pl-8 pr-4 text-xs font-black text-blue-500 outline-none">
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">bKash Transaction ID (TxID)</label>
+                  <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500"><i class="fa-solid fa-key"></i></span>
+                    <input type="text" id="tx-id" required placeholder="Ex: AM93K8S09" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3.5 pl-11 pr-4 text-xs font-mono font-bold uppercase focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                  </div>
+                </div>
+
+                <button type="submit" id="deposit-submit-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-2xl text-xs shadow-md flex items-center justify-center gap-2 transition-all">
+                  <span id="btn-deposit-text">Submit Payment Request</span>
+                  <span id="btn-deposit-spinner" class="hidden animate-spin rounded-full h-4.5 w-4.5 border-2 border-white border-t-transparent"></span>
+                </button>
+              </form>
+
+              <div class="bg-blue-50/50 dark:bg-blue-950/20 p-4 rounded-2xl border border-blue-100/40 space-y-3">
+                <span class="text-xs font-extrabold text-blue-600 dark:text-blue-400 block"><i class="fa-solid fa-circle-question"></i> ইনস্ট্যান্ট ফান্ড অ্যাড সাপোর্ট:</span>
+                <p class="text-[10px] text-slate-500 leading-relaxed">পেমেন্ট ফর্ম সাবমিট করার পর দ্রুত ব্যালেন্স যুক্ত করতে ট্রানজেকশনের স্ক্রিনশট সহ আমাদের টেলিগ্রাম বা হোয়াটসঅ্যাপে যোগাযোগ করুন।</p>
+                <div class="flex gap-4">
+                  <a href="https://wa.me/8801860909272" target="_blank" class="text-xs font-bold text-emerald-500 hover:underline"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+                  <a href="https://t.me/kaisarvai007" target="_blank" class="text-xs font-bold text-blue-500 hover:underline"><i class="fa-brands fa-telegram"></i> Telegram</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Deposit history table -->
+          <div class="bg-white dark:bg-[#0E1527]/90 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm overflow-hidden mt-6 backdrop-blur-md">
+            <div class="p-5 border-b border-slate-150 dark:border-slate-800/40 flex items-center gap-2">
+              <span class="text-xs bg-slate-100 dark:bg-slate-900 text-slate-500 dark:text-slate-400 px-3 py-1.5 rounded-full font-bold uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-clock-rotate-left"></i> Recent Deposit History</span>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="bg-slate-50 dark:bg-slate-900/40 text-slate-400 uppercase font-bold border-b border-slate-150 dark:border-slate-800/40">
+                    <th class="py-3 px-4">TxID</th>
+                    <th class="py-3 px-4">Date</th>
+                    <th class="py-3 px-4">Sender Number</th>
+                    <th class="py-3 px-4">Amount (BDT)</th>
+                    <th class="py-3 px-4">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="deposit-logs-body" class="divide-y divide-slate-100 dark:divide-slate-800/40">
+                  <tr id="empty-deposits-row">
+                    <td colspan="5" class="py-6 text-center text-slate-400 font-medium">No deposit history found.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW: TICKETS -->
+        <div id="view-tickets" class="hidden space-y-6">
+          <div>
+            <h2 class="text-xl md:text-2xl font-black tracking-tight"><i class="fa-regular fa-comments text-blue-500"></i> Support Tickets</h2>
+          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-5 bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm backdrop-blur-md">
+              <form onsubmit="handleTicketSubmit(event)" class="space-y-4">
+                <div>
+                  <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Subject</label>
+                  <input type="text" id="ticket-subject" required placeholder="Ex: Custom Payment Delay" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-semibold focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Description</label>
+                  <textarea id="ticket-msg" required rows="4" placeholder="Briefly describe your request" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 text-xs focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-2xl text-xs transition-all shadow-md">Create Ticket</button>
+              </form>
             </div>
             
-            <div class="d-flex justify-content-center gap-2 mt-4">
-                <button class="btn btn-sm btn-dark" onclick="toggleLanguage('english')">EN</button>
-                <button class="btn btn-sm btn-dark" onclick="toggleLanguage('bangla')">BN</button>
-            </div>
-        </div>
-    </div>
+            <div class="lg:col-span-7 bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm overflow-hidden backdrop-blur-md space-y-6">
+              <div class="space-y-3" id="tickets-history-container">
+                <!-- Syncs from Realtime DB -->
+              </div>
 
-    <!-- MAIN APP DASHBOARD -->
-    <div id="appDashboard">
-        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-        
-        <!-- Sidebar Navigation -->
-        <div class="sidebar" id="sidebarPanel">
-            <div>
-                <div class="p-4 d-flex justify-content-between align-items-center">
-                    <span class="fs-4 fw-bold text-white tracking-wider">STEVENX</span>
-                    <button class="btn btn-sm btn-dark d-lg-none" onclick="toggleSidebar()"><i class="fa-solid fa-xmark"></i></button>
+              <!-- Help desk with Direct WhatsApp Support -->
+              <div class="bg-emerald-500/10 p-4 rounded-3xl border border-emerald-800/30 flex items-center justify-between backdrop-blur-md">
+                <div class="flex items-center gap-3">
+                  <span class="bg-emerald-500/20 text-emerald-400 p-2.5 rounded-xl text-lg"><i class="fa-brands fa-whatsapp"></i></span>
+                  <div>
+                    <h4 class="text-xs font-bold text-slate-700 dark:text-slate-200">WhatsApp Instant Support</h4>
+                    <p class="text-[10px] text-slate-400 mt-0.5">যেকোনো জরুরী প্রয়োজনে সরাসরি হোয়াটসঅ্যাপ মেসেজ দিন।</p>
+                  </div>
                 </div>
-                
-                <div class="sidebar-menu">
-                    <a href="#" class="nav-menu-item" id="btnPageViews" onclick="showPage('views')">
-                        <i class="fa-solid fa-cart-shopping"></i> New Order
-                    </a>
-                    <a href="#" class="nav-menu-item" id="btnPageMassOrder" onclick="showPage('mass')">
-                        <i class="fa-solid fa-cart-plus"></i> Mass Order
-                    </a>
-                    <a href="#" class="nav-menu-item" id="btnPageServices" onclick="showPage('services')">
-                        <i class="fa-solid fa-list"></i> Services
-                    </a>
-                    <a href="#" class="nav-menu-item" id="btnPageOrders" onclick="showPage('orders')">
-                        <i class="fa-solid fa-box"></i> Orders
-                    </a>
-                    <a href="#" class="nav-menu-item" id="btnPageRefunds" onclick="showPage('refunds')">
-                        <i class="fa-solid fa-reply-all"></i> Refunds
-                    </a>
-                    <a href="#" class="nav-menu-item" id="btnPageSupport" onclick="showPage('support')">
-                        <i class="fa-regular fa-comments"></i> Tickets
-                    </a>
-                    <a href="#" class="nav-menu-item" id="btnPageDeposit" onclick="showPage('deposit')">
-                        <i class="fa-regular fa-credit-card"></i> Add Funds
-                    </a>
-                    <a href="#" class="nav-menu-item" id="btnPageAPI" onclick="showPage('api')">
-                        <i class="fa-solid fa-server"></i> API
-                    </a>
-                    <a href="#" class="nav-menu-item" id="btnPageTerms" onclick="showPage('terms')">
-                        <i class="fa-regular fa-file-lines"></i> Terms
-                    </a>
-                    <a href="#" class="nav-menu-item" id="btnPageUpdates" onclick="showPage('updates')">
-                        <i class="fa-regular fa-bell"></i> Updates
-                    </a>
-                    <a href="#" class="nav-menu-item" id="btnPageRefer" onclick="showPage('refer')">
-                        <i class="fa-solid fa-gift"></i> Affiliates
-                    </a>
-                    <a href="#" class="nav-menu-item" id="btnPageContact" onclick="showPage('contact')">
-                        <i class="fa-regular fa-envelope"></i> Contact us
-                    </a>
-                </div>
-            </div>
-
-            <!-- Floating Telegram button inside sidebar footer -->
-            <div class="d-flex align-items-center">
-                <a href="https://t.me/your_telegram_channel" target="_blank" class="telegram-float-btn">
-                    <i class="fa-brands fa-telegram-plane fs-4"></i>
+                <a href="https://wa.me/8801860909272" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-md">
+                  Message <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
                 </a>
-                <a href="#" class="btn btn-sm btn-link text-white-50 ms-auto me-3 text-decoration-none" onclick="handleLogout()"><i class="fa-solid fa-power-off"></i></a>
+              </div>
             </div>
+          </div>
         </div>
 
-        <!-- Top Header Navigation -->
-        <nav class="navbar navbar-dark bg-dark py-3 px-4" style="background-color: #12141c !important; border-bottom: 1px solid var(--border-color);">
-            <div class="container-fluid">
-                <div class="d-flex align-items-center gap-3">
-                    <button class="btn btn-dark" onclick="toggleSidebar()">
-                        <i class="fa-solid fa-bars"></i>
-                    </button>
-                    <span class="fs-4 fw-bold text-blue-flame d-none d-sm-inline-block">STEVENX</span>
-                </div>
-                
-                <div class="d-flex align-items-center gap-3">
-                    <div class="text-end">
-                        <small class="text-muted d-block" id="headerBalanceLabel" style="font-size:10px;">Available Balance</small>
-                        <span class="fw-bold text-blue-flame font-monospace" id="headerBalanceDisplay">0.0000 USD</span>
-                    </div>
-                    <select class="form-select form-select-sm bg-dark text-white border-secondary w-auto" id="langSelector" onchange="toggleLanguage(this.value)">
-                        <option value="english">English</option>
-                        <option value="bangla">Bangla</option>
-                    </select>
-                </div>
-            </div>
-        </nav>
+        <!-- VIEW: ADMIN DASHBOARD (Pinhole admin system to approve transactions/complete orders) -->
+        <div id="view-admin" class="hidden space-y-6">
+          <div>
+            <h2 class="text-xl md:text-2xl font-black tracking-tight flex items-center gap-2 text-amber-500"><i class="fa-solid fa-user-shield"></i> Administration Console</h2>
+            <p class="text-xs text-slate-400 mt-1">Verify live transactions, manage client orders, and update statuses.</p>
+          </div>
 
-        <!-- Main Body Area -->
-        <div class="container py-4">
-            <!-- Stats -->
-            <div class="row g-3 mb-4">
-                <div class="col-md-4">
-                    <div class="content-card text-center py-3">
-                        <small class="text-muted" id="statBalanceLabel">Balance</small>
-                        <h3 class="text-blue-flame font-monospace mt-1" id="statBalance">0.0000 USD</h3>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="content-card text-center py-3">
-                        <small class="text-muted" id="statSpentLabel">Total Spent</small>
-                        <h3 class="text-danger font-monospace mt-1" id="statSpent">0.0000 USD</h3>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="content-card text-center py-3">
-                        <small class="text-muted">Total Orders</small>
-                        <h3 class="text-success font-monospace mt-1" id="statOrders">0</h3>
-                    </div>
-                </div>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Deposit Verification Desk -->
+            <div class="bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm space-y-4 backdrop-blur-md">
+              <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-circle-dollar-to-slot text-emerald-500"></i> Deposit Verification Desk</h3>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr class="bg-slate-50 dark:bg-slate-900/40 text-slate-400 uppercase font-bold border-b border-slate-150 dark:border-slate-800/40">
+                      <th class="py-3 px-4">User</th>
+                      <th class="py-3 px-4">TxID</th>
+                      <th class="py-3 px-4">Amount</th>
+                      <th class="py-3 px-4 text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-deposits-table-body" class="divide-y divide-slate-100 dark:divide-slate-800/40">
+                    <tr>
+                      <td colspan="4" class="py-6 text-center text-slate-400 font-medium">No pending deposit verification request.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
 
-            <!-- VIEW 1: NEW ORDER (POST VIEWS) -->
-            <div id="sectionViews" class="page-view">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="content-card">
-                            <h5 class="mb-4 text-blue-flame"><i class="fa-solid fa-cart-shopping me-2"></i>Create New Order</h5>
-                            <form id="viewsOrderForm" onsubmit="handlePlaceViewsOrder(event)">
-                                <div class="mb-3">
-                                    <label class="form-label text-muted">Post View Option</label>
-                                    <select class="form-select bg-dark text-white border-secondary" id="viewsCategory" onchange="onViewsCategoryChange()">
-                                        <option value="telegram_old_post">Telegram Post Views | Old Post</option>
-                                        <option value="telegram_future_post">[ Auto ⚙ ] Telegram Views - Future Post</option>
-                                    </select>
-                                </div>
-                                <div class="alert alert-dark small mb-3 border-secondary" id="viewsDescription">
-                                    Select a service to display the description.
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label text-muted">Post / Channel Link</label>
-                                    <input type="url" class="form-control bg-dark text-white border-secondary" id="viewsLink" placeholder="https://t.me/channel/123" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label text-muted">Quantity</label>
-                                    <input type="number" class="form-control bg-dark text-white border-secondary" id="viewsQuantity" value="10" min="10" oninput="calculateViewsCost()">
-                                    <small class="text-muted">Minimum order limit is 10 views</small>
-                                </div>
-                                <div class="mb-3 d-flex justify-content-between align-items-center">
-                                    <span class="text-muted">Estimated Cost:</span>
-                                    <strong class="text-blue-flame font-monospace" id="viewsCostDisplay">0.0000 USD</strong>
-                                </div>
-                                <button type="submit" class="btn btn-blue-flame w-100">Submit Order</button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="content-card">
-                            <h5 class="mb-3"><i class="fa-solid fa-circle-info me-2"></i>Order Conditions</h5>
-                            <ul class="small text-muted ps-3">
-                                <li class="mb-2">Old Post plan is processed instantly upon placement.</li>
-                                <li class="mb-2">Future Post plan is fully automated [Auto ⚙] to deliver views on subsequent posts.</li>
-                                <li class="mb-2">Ensure the channel remains public while the plan runs.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+            <!-- Client Order Dispatch -->
+            <div class="bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm space-y-4 backdrop-blur-md">
+              <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-truck-ramp-box text-blue-500"></i> Client Order Dispatch</h3>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr class="bg-slate-50 dark:bg-slate-900/40 text-slate-400 uppercase font-bold border-b border-slate-150 dark:border-slate-800/40">
+                      <th class="py-3 px-4">User</th>
+                      <th class="py-3 px-4">Service</th>
+                      <th class="py-3 px-4">Charge</th>
+                      <th class="py-3 px-4 text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-orders-table-body" class="divide-y divide-slate-100 dark:divide-slate-800/40">
+                    <tr>
+                      <td colspan="4" class="py-6 text-center text-slate-400 font-medium">No pending client order requests.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
-
-            <!-- VIEW 2: MASS ORDER -->
-            <div id="sectionMass" class="page-view">
-                <div class="content-card">
-                    <h5 class="mb-3 text-blue-flame">Mass Ordering</h5>
-                    <textarea class="form-control bg-dark text-white border-secondary" rows="6" placeholder="service_id | quantity | link"></textarea>
-                    <button class="btn btn-blue-flame mt-3">Submit Mass Orders</button>
-                </div>
-            </div>
-
-            <!-- VIEW 3: SERVICES -->
-            <div id="sectionServices" class="page-view">
-                <div class="content-card">
-                    <h5 class="mb-3 text-blue-flame">Our Platform Services</h5>
-                    <div class="table-responsive">
-                        <table class="table table-dark table-striped align-middle">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Service Name</th>
-                                    <th>Rate (per 10 views)</th>
-                                    <th>Min Order</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>101</td>
-                                    <td>Telegram Post Views | Old Post</td>
-                                    <td id="srvRateOld">$0.0010 USD</td>
-                                    <td>10</td>
-                                </tr>
-                                <tr>
-                                    <td>102</td>
-                                    <td>[ Auto ⚙ ] Telegram Views - Future Post</td>
-                                    <td id="srvRateFuture">$0.0008 USD</td>
-                                    <td>10</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VIEW 4: ORDERS HISTORY -->
-            <div id="sectionOrders" class="page-view">
-                <div class="content-card">
-                    <h5 class="mb-3 text-blue-flame">Your Active and Past Orders</h5>
-                    <p class="text-muted small">Please reference the Transaction Ledger at the bottom of the page for details on your account history.</p>
-                </div>
-            </div>
-
-            <!-- VIEW 5: REFUNDS -->
-            <div id="sectionRefunds" class="page-view">
-                <div class="content-card">
-                    <h5 class="mb-3 text-blue-flame">Refund Policies</h5>
-                    <p class="text-muted small">
-                        Refunds for canceled or incomplete orders are credited back to your internal balance automatically. For external merchant billing inquiries, submit a ticket.
-                    </p>
-                </div>
-            </div>
-
-            <!-- VIEW 6: ADD FUNDS (MANUAL DEPOSIT) -->
-            <div id="sectionDeposit" class="page-view">
-                <div class="row">
-                    <div class="col-lg-7">
-                        <div class="content-card">
-                            <h5 class="mb-3 text-blue-flame"><i class="fa-solid fa-wallet me-2"></i>Add Funds Manual</h5>
-                            
-                            <ul class="nav nav-tabs mb-3 border-secondary" id="depTab">
-                                <li class="nav-item">
-                                    <button class="nav-link active bg-dark text-white border-secondary" onclick="switchDepositMethod('bkash')">bKash (BD)</button>
-                                </li>
-                                <li class="nav-item">
-                                    <button class="nav-link bg-dark text-white border-secondary" onclick="switchDepositMethod('binance')">Binance Pay (USD)</button>
-                                </li>
-                            </ul>
-
-                            <div class="alert alert-dark small mb-3 border-secondary" id="depInstructions">
-                                Send money (Personal) to bKash number <strong>01860909272</strong>, then submit transaction details below.
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label" id="depAmountLabel">Deposit Amount (USD)</label>
-                                <input type="number" step="0.0001" class="form-control bg-dark text-white border-secondary" id="depAmount" required placeholder="Minimum deposit value applies">
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Transaction ID (TxID)</label>
-                                <input type="text" class="form-control bg-dark text-white border-secondary" id="depTxId" required placeholder="e.g. A92K8109F">
-                            </div>
-
-                            <button type="button" class="btn btn-blue-flame w-100" onclick="handleDepositSubmission()">Submit Deposit</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VIEW 7: API INTEGRATION -->
-            <div id="sectionAPI" class="page-view">
-                <div class="content-card">
-                    <h5 class="mb-3 text-blue-flame">API System Access</h5>
-                    <p class="text-muted small">
-                        Connect to our endpoints to automate your business workflows.
-                    </p>
-                    <input type="text" class="form-control bg-dark text-white border-secondary font-monospace" value="https://stevenx.com/api/v1/services" readonly>
-                </div>
-            </div>
-
-            <!-- VIEW 8: TERMS OF SERVICE -->
-            <div id="sectionTerms" class="page-view">
-                <div class="content-card">
-                    <h5 class="mb-3 text-blue-flame">Terms of Service</h5>
-                    <p class="text-muted small">
-                        By placing orders, you agree to our platform conditions. We are not responsible for any issues resulting from external channel changes.
-                    </p>
-                </div>
-            </div>
-
-            <!-- VIEW 9: UPDATES LOG -->
-            <div id="sectionUpdates" class="page-view">
-                <div class="content-card">
-                    <h5 class="mb-3 text-blue-flame">Platform News and System Updates</h5>
-                    <span class="badge bg-info text-dark mb-2">Notice</span>
-                    <p class="text-muted small">We have updated our post view plans and improved overall delivery speeds.</p>
-                </div>
-            </div>
-
-            <!-- VIEW 10: AFFILIATE SYSTEM -->
-            <div id="sectionRefer" class="page-view">
-                <div class="content-card text-center py-4">
-                    <h1 class="text-blue-flame display-4"><i class="fa-solid fa-gift"></i></h1>
-                    <h4 class="mt-3">Affiliates Program</h4>
-                    <p class="text-muted mx-auto small" style="max-width: 600px;">
-                        Promote STEVENX SMM Panel. For every user that registers using your referral code, you will earn <strong class="text-blue-flame" id="referralRewardLabel">0.0001 USD</strong> instantly credited to your active account balance.
-                    </p>
-                    <div class="d-inline-block bg-dark border border-secondary p-3 rounded mt-3">
-                        <span class="text-muted d-block small mb-1">Your Referral Code</span>
-                        <h4 class="text-blue-flame font-monospace mb-0" id="displayReferralCode">---</h4>
-                    </div>
-                    <div class="mt-4">
-                        <span class="text-muted">Total Successful Referrals: </span>
-                        <strong class="text-blue-flame fs-5 font-monospace ms-1" id="refCount">0</strong>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VIEW 11: SUPPORT TICKETS & CONTACT US -->
-            <div id="sectionSupport" class="page-view">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="content-card">
-                            <h5 class="mb-3 text-blue-flame"><i class="fa-solid fa-headset me-2"></i>Create Support Ticket</h5>
-                            <div class="mb-3">
-                                <label class="form-label">Subject</label>
-                                <input type="text" class="form-control bg-dark text-white border-secondary" id="ticketSubject" placeholder="e.g., Deposit Inquiry">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Message Details</label>
-                                <textarea class="form-control bg-dark text-white border-secondary" id="ticketMsg" rows="4" placeholder="Explain your inquiry..."></textarea>
-                            </div>
-                            <button type="button" class="btn btn-blue-flame w-100" onclick="handleTicketSubmit()">Send Ticket</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VIEW 12: CONTACT US PAGE (3 lines exact info) -->
-            <div id="sectionContact" class="page-view">
-                <div class="content-card">
-                    <h5 class="mb-3 text-blue-flame"><i class="fa-solid fa-envelope me-2"></i>Contact Us</h5>
-                    <ul class="list-unstyled text-muted small">
-                        <li class="mb-2"><i class="fa-solid fa-envelope me-2 text-blue-flame"></i>Email Support: <strong>7hsayemgamingofvlog2244@gmail.com</strong></li>
-                        <li class="mb-2"><i class="fa-solid fa-clock me-2 text-blue-flame"></i>Inquiries: Monitored continuously.</li>
-                        <li class="mb-2"><i class="fa-brands fa-telegram me-2 text-blue-flame"></i>Telegram Channel: Join using the icon in the sidebar.</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- HIDDEN GATEWAY: ADMIN SYSTEM (Access via console or custom execution) -->
-            <div id="sectionAdmin" class="page-view">
-                <div class="content-card border-danger">
-                    <h5 class="text-danger mb-3"><i class="fa-solid fa-user-shield me-2"></i>Admin Gatekeeper</h5>
-                </div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="content-card">
-                            <h6 class="mb-3 text-warning">Pending Deposit Requests</h6>
-                            <div class="table-responsive">
-                                <table class="table table-dark table-striped small align-middle">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>User</th>
-                                            <th>Amount</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="adminDepositQueue">
-                                        <tr><td colspan="4" class="text-center text-muted small">No pending items</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="content-card">
-                            <h6 class="mb-3 text-warning">Pending Services Orders</h6>
-                            <div class="table-responsive">
-                                <table class="table table-dark table-striped small align-middle">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>User</th>
-                                            <th>Cost</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="adminOrderQueue">
-                                        <tr><td colspan="4" class="text-center text-muted small">No pending items</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TRANSACTION HISTORY SECTION -->
-            <div class="row mt-4">
-                <div class="col-12">
-                    <div class="content-card">
-                        <h5 class="mb-3"><i class="fa-solid fa-clock-rotate-left me-2"></i>Transaction Ledger & Status History</h5>
-                        <div class="table-responsive">
-                            <table class="table table-dark table-hover align-middle">
-                                <thead>
-                                    <tr>
-                                        <th>Ref ID</th>
-                                        <th>Activity Log / Link</th>
-                                        <th>Cost Value</th>
-                                        <th>Current Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="ordersTableBody">
-                                    <tr>
-                                        <td colspan="4" class="text-center text-muted small py-4">No logged history found.</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+          </div>
         </div>
+
+      </main>
+
     </div>
+  </div>
 
-    <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- ORDER MODAL -->
+  <div id="order-modal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+    <div class="flex items-center justify-center min-h-screen p-4 text-center sm:block">
+      <div onclick="closeOrderModal()" class="fixed inset-0 transition-opacity bg-slate-950/70"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+      <div class="inline-block w-full max-w-lg overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-[#0E1527] rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800/55 my-8">
+        <div class="p-6 border-b border-slate-100 dark:border-slate-800/40 flex items-center justify-between">
+          <h3 class="text-base font-extrabold flex items-center gap-2"><i class="fa-solid fa-cart-arrow-down text-blue-500"></i> Place New Order</h3>
+          <button onclick="closeOrderModal()" class="text-slate-400 hover:text-slate-600 focus:outline-none"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <form id="orderForm" onsubmit="handlePlaceOrder(event)" class="p-6 space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Category Platform</label>
+            <select id="modal-category" onchange="populateModalServices()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-medium outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="Telegram">Telegram</option>
+              <option value="Instagram">Instagram</option>
+              <option value="YouTube">YouTube</option>
+              <option value="TikTok">TikTok</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Select Service</label>
+            <select id="modal-service" onchange="updateServiceDetails()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-medium outline-none focus:ring-2 focus:ring-blue-500"></select>
+          </div>
+          
+          <!-- Cost Breakdown with Gamified verified badge discount -->
+          <div class="bg-blue-50/50 dark:bg-blue-950/20 p-4 rounded-2xl text-xs space-y-1.5 border border-blue-100/40">
+            <div class="flex justify-between">
+              <span class="text-slate-400 font-bold">Subtotal Cost:</span>
+              <span id="modal-rate" class="font-extrabold text-slate-700 dark:text-slate-300">৳0.00</span>
+            </div>
+            <div class="flex justify-between items-center" id="discount-modal-row">
+              <span class="text-slate-400 font-bold flex items-center gap-1">
+                <i class="fa-solid fa-gift text-blue-500"></i> Blue Badge Discount:
+              </span>
+              <span id="modal-discount-tag" class="font-black text-rose-500">-৳0.00</span>
+            </div>
+            <div class="border-t border-slate-100 dark:border-slate-800/60 pt-1.5 flex justify-between">
+              <span class="text-slate-500 font-extrabold">Final Charge:</span>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-blue-500 font-black text-xs">৳</span>
+                <input type="text" id="modal-cost" readonly value="0.00" class="w-24 bg-transparent border-none text-right font-black text-blue-500 outline-none p-0">
+              </div>
+            </div>
+          </div>
 
-    <!-- App JavaScript Logic -->
-    <script>
-        // Background Particle Logic - Floating Balls
-        const canvas = document.getElementById('live-bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Target Link / URL</label>
+            <input type="url" id="modal-link" required placeholder="https://t.me/yourchannel" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-medium focus:ring-2 focus:ring-blue-500 outline-none">
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Quantity</label>
+              <input type="number" id="modal-quantity" required min="10" placeholder="1000" oninput="calculateCost()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-semibold focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+          </div>
+          <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-2xl text-xs transition-all shadow-md mt-2 flex items-center justify-center gap-2"><i class="fa-regular fa-paper-plane"></i> Place Order</button>
+        </form>
+      </div>
+    </div>
+  </div>
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+  <!-- REGISTRATION ACCESS MODAL -->
+  <div id="register-modal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+    <div class="flex items-center justify-center min-h-screen p-4 text-center sm:block">
+      <div onclick="closeRegisterModal()" class="fixed inset-0 transition-opacity bg-slate-950/70"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+      <div class="inline-block w-full max-w-md overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-[#0E1527] rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800/55 my-8">
+        <div class="p-6 border-b border-slate-100 dark:border-slate-800/40 flex items-center justify-between">
+          <h3 class="text-base font-extrabold flex items-center gap-2"><i class="fa-solid fa-user-plus text-blue-500"></i> Register New Account</h3>
+          <button onclick="closeRegisterModal()" class="text-slate-400 hover:text-slate-600 focus:outline-none"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <form onsubmit="handleRegisterSubmit(event)" class="p-6 space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Display Name</label>
+            <input type="text" id="reg-name" required placeholder="Ex: Kaisar Ahmed" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-medium focus:ring-2 focus:ring-blue-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Email Address</label>
+            <input type="email" id="reg-email" required placeholder="yourname@domain.com" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-medium focus:ring-2 focus:ring-blue-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Password</label>
+            <input type="password" id="reg-password" required placeholder="Choose a Secure Password" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-medium focus:ring-2 focus:ring-blue-500 outline-none">
+          </div>
+          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-2xl text-xs transition-all shadow-md mt-2 flex items-center justify-center gap-2">Sign Up Now <i class="fa-solid fa-user-plus"></i></button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-2"></div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBchtm5yS1ZuW1b-5DWAIncTysOv09bYX0",
+      authDomain: "stevenx-4ef00.firebaseapp.com",
+      databaseURL: "https://stevenx-4ef00-default-rtdb.firebaseio.com",
+      projectId: "stevenx-4ef00",
+      storageBucket: "stevenx-4ef00.firebasestorage.app",
+      messagingSenderId: "882062097165"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const database = firebase.database();
+
+    // ================= DYNAMIC INTERACTIVE PHYSICS CANVAS BACKGROUND =================
+    const canvas = document.getElementById('live-lighting-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    function resizeCanvas() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      ctx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Ambient Lighting positions
+    const lights = [
+      { x: Math.random() * width, y: Math.random() * height, tx: Math.random() * width, ty: Math.random() * height, r: 350, speed: 0.002, colorDark: 'rgba(59, 130, 246, 0.08)', colorLight: 'rgba(59, 130, 246, 0.03)' },
+      { x: Math.random() * width, y: Math.random() * height, tx: Math.random() * width, ty: Math.random() * height, r: 450, speed: 0.0015, colorDark: 'rgba(99, 102, 241, 0.06)', colorLight: 'rgba(99, 102, 241, 0.02)' },
+      { x: Math.random() * width, y: Math.random() * height, tx: Math.random() * width, ty: Math.random() * height, r: 300, speed: 0.003, colorDark: 'rgba(139, 92, 246, 0.05)', colorLight: 'rgba(139, 92, 246, 0.01)' }
+    ];
+
+    // Mouse Tracking state
+    let mouse = { x: null, y: null, radius: 120 };
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+    window.addEventListener('mouseleave', () => {
+      mouse.x = null;
+      mouse.y = null;
+    });
+
+    // Falling physics ball simulation
+    const balls = [];
+    const maxBalls = 20;
+    const gravity = 0.05;
+    const bounce = -0.6;
+    const friction = 0.98;
+
+    for (let i = 0; i < maxBalls; i++) {
+      balls.push({
+        x: Math.random() * width,
+        y: Math.random() * -height, 
+        r: 8 + Math.random() * 12,
+        vx: (Math.random() - 0.5) * 2,
+        vy: Math.random() * 2
+      });
+    }
+
+    function animateBackground() {
+      ctx.clearRect(0, 0, width, height);
+      const isDark = document.documentElement.classList.contains('dark');
+
+      // 1. Draw Lighting Spotlight system
+      lights.forEach(l => {
+        l.x += (l.tx - l.x) * l.speed;
+        l.y += (l.ty - l.y) * l.speed;
+
+        if (Math.abs(l.tx - l.x) < 10 && Math.abs(l.ty - l.y) < 10) {
+          l.tx = Math.random() * width;
+          l.ty = Math.random() * height;
         }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
 
-        class BubbleParticle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.radius = Math.random() * 25 + 10;
-                this.speedX = Math.random() * 0.4 - 0.2;
-                this.speedY = Math.random() * 0.4 - 0.2;
-                this.color = Math.random() > 0.5 ? 'rgba(0, 210, 255, 0.15)' : 'rgba(121, 99, 205, 0.12)';
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
+        const gradient = ctx.createRadialGradient(l.x, l.y, 0, l.x, l.y, l.r);
+        const targetColor = isDark ? l.colorDark : l.colorLight;
+        gradient.addColorStop(0, targetColor);
+        gradient.addColorStop(1, 'rgba(0,0,0,0)');
+        
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(l.x, l.y, l.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
 
-                if (this.x < -this.radius) this.x = canvas.width + this.radius;
-                if (this.x > canvas.width + this.radius) this.x = -this.radius;
-                if (this.y < -this.radius) this.y = canvas.height + this.radius;
-                if (this.y > canvas.height + this.radius) this.y = -this.radius;
-            }
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.fill();
-                
-                ctx.strokeStyle = 'rgba(0, 210, 255, 0.05)';
-                ctx.lineWidth = 1;
-                ctx.stroke();
-            }
+      // 2. Draw falling physical balls
+      balls.forEach(b => {
+        b.vy += gravity;
+        b.x += b.vx;
+        b.y += b.vy;
+
+        // Interaction with Cursor: Push particles away
+        if (mouse.x !== null && mouse.y !== null) {
+          const dx = b.x - mouse.x;
+          const dy = b.y - mouse.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < mouse.radius) {
+            const force = (mouse.radius - dist) / mouse.radius;
+            const angle = Math.atan2(dy, dx);
+            b.vx += Math.cos(angle) * force * 1.2;
+            b.vy += Math.sin(angle) * force * 1.2;
+          }
         }
 
-        function initParticles() {
-            particles = [];
-            const count = Math.min(Math.floor(window.innerWidth / 20), 40);
-            for (let i = 0; i < count; i++) {
-                particles.push(new BubbleParticle());
-            }
+        // Collision: Left / Right bounds
+        if (b.x - b.r < 0) {
+          b.x = b.r;
+          b.vx = -b.vx * 0.8;
+        } else if (b.x + b.r > width) {
+          b.x = width - b.r;
+          b.vx = -b.vx * 0.8;
         }
-        initParticles();
 
-        function animateBg() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
-            requestAnimationFrame(animateBg);
+        // Collision: Floor bounding bounce
+        if (b.y + b.r > height) {
+          b.y = height - b.r;
+          b.vy = b.vy * bounce;
+          b.vx *= friction;
+
+          // If kinetic force is exhausted, respawn back at the top ceiling
+          if (Math.abs(b.vy) < 0.2) {
+            b.y = Math.random() * -100;
+            b.x = Math.random() * width;
+            b.vy = Math.random() * 1.5;
+            b.vx = (Math.random() - 0.5) * 2;
+          }
         }
-        animateBg();
 
-        // System Constants & Setup (Internal primary state values are maintained in USD)
-        const BDT_TO_USD_RATE = 115.0; 
-        const REFER_REWARD_USD = 0.0001; 
+        const ballGrad = ctx.createRadialGradient(b.x, b.y, b.r * 0.1, b.x, b.y, b.r);
+        if (isDark) {
+          ballGrad.addColorStop(0, 'rgba(255, 255, 255, 0.7)');
+          ballGrad.addColorStop(0.3, 'rgba(59, 130, 246, 0.4)');
+          ballGrad.addColorStop(1, 'rgba(99, 102, 241, 0)');
+        } else {
+          ballGrad.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
+          ballGrad.addColorStop(0.3, 'rgba(147, 197, 253, 0.3)');
+          ballGrad.addColorStop(1, 'rgba(165, 180, 252, 0)');
+        }
 
-        const TRANSLATIONS = {
-            english: {
-                login_title: "Sign In",
-                signup_title: "Create Account",
-                signin_btn: "Sign In",
-                signup_btn: "Sign Up",
-                no_acc: "Don't have an account?",
-                have_acc: "Already have an account?",
-                user_lbl: "Username",
-                no_orders: "No transactions or orders found."
-            },
-            bangla: {
-                login_title: "লগইন করুন",
-                signup_title: "নিবন্ধন করুন",
-                signin_btn: "সাইন ইন",
-                signup_btn: "নিবন্ধন করুন",
-                no_acc: "অ্যাকাউন্ট নেই?",
-                have_acc: "ইতিমধ্যে অ্যাকাউন্ট আছে?",
-                user_lbl: "ব্যবহারকারীর নাম",
-                no_orders: "কোনো লেনদেন বা অর্ডার পাওয়া যায়নি।"
-            }
-        };
+        ctx.fillStyle = ballGrad;
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
 
-        const VIEW_SERVICES = {
-            telegram_old_post: {
-                name: "Telegram Post Views | Old Post",
-                description: "Fast delivery of post views for existing/old posts. Enter your public link to start.",
-                min: 10,
-                ratePerTen: 0.0010 // stored in USD
-            },
-            telegram_future_post: {
-                name: "[ Auto ⚙ ] Telegram Views - Future Post",
-                description: "Fully automated system delivering views automatically on subsequent future posts.",
-                min: 10,
-                ratePerTen: 0.0008 // stored in USD
-            }
-        };
+      requestAnimationFrame(animateBackground);
+    }
+    animateBackground();
 
-        let authMode = 'login'; 
-        let currentLang = 'english';
-        let currentPaymentMethod = 'bkash';
+    // Services Database
+    const services = [
+      { id: 30447, category: 'Telegram', name: 'Auto Telegram Post View | instant | Non Drop | Future 200 Post', icon: 'fa-telegram text-blue-400', rate: 114.41, min: 100, max: 50000 },
+      { id: 4521, category: 'Telegram', name: 'Telegram Channel Members | Non Drop | High Quality', icon: 'fa-telegram text-blue-400', rate: 208.00, min: 10, max: 100000 },
+      { id: 4522, category: 'Telegram', name: 'Telegram Post Views | Super Instant & Fast', icon: 'fa-telegram text-blue-400', rate: 39.00, min: 100, max: 500000 },
+      { id: 4523, category: 'Telegram', name: 'Telegram Post Reactions | Positive Custom Mix', icon: 'fa-telegram text-blue-400', rate: 84.50, min: 50, max: 100000 },
+      { id: 4525, category: 'Instagram', name: 'Instagram Followers | 100% Real & Active', icon: 'fa-instagram text-pink-500', rate: 273.00, min: 10, max: 100000 },
+      { id: 4526, category: 'YouTube', name: 'YouTube Subscribers | Non Drop Guaranteed', icon: 'fa-youtube text-red-500', rate: 364.00, min: 10, max: 500000 },
+      { id: 4530, category: 'TikTok', name: 'TikTok Video Views | Instant Start | High Retention', icon: 'fa-tiktok text-[#25F4EE]', rate: 15.00, min: 500, max: 1000000 },
+      { id: 4531, category: 'TikTok', name: 'TikTok Real Followers | Safe Organic Growth', icon: 'fa-tiktok text-[#25F4EE]', rate: 312.00, min: 10, max: 50000 },
+      { id: 4532, category: 'TikTok', name: 'TikTok Video Likes | Stable & Super Fast', icon: 'fa-tiktok text-[#25F4EE]', rate: 195.00, min: 25, max: 200000 }
+    ];
 
-        // Simulated user profiles database (Persisted in USD)
-        let registeredUsers = {
-            "demo_admin": {
-                username: "demo_admin",
-                email: "admin@stevenx.com",
-                password: "123",
-                balance: 10.0, // Stored in USD ($10.00)
-                spent: 0.0,
-                referralCode: "ADMIN100",
-                referrals: 0,
-                orders: []
-            }
-        };
+    // Client memory states
+    let localUserState = {
+      uid: null,
+      balance: 0.00,
+      spent: 0.00,
+      orders: 0,
+      pending: 0,
+      role: 'user',
+      displayName: "Loading...",
+      username: "loading",
+      avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80"
+    };
 
-        let currentSessionUser = null; 
-        let adminPendingDeposits = [];
-        let adminPendingOrders = [];
+    let selectedFilterCategory = 'All';
+    let isAdminActive = false;
 
-        document.addEventListener("DOMContentLoaded", () => {
-            onViewsCategoryChange();
-            toggleLanguage('english');
-            switchAuthMode({ preventDefault: () => {} }); 
+    // Toast Generator
+    function showToast(message, status = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `p-4 rounded-2xl shadow-lg text-xs font-bold transition-all transform translate-y-2 opacity-0 duration-300 flex items-center gap-2 ${
+        status === 'success' ? 'bg-emerald-600 text-white font-sans' : 
+        status === 'error' ? 'bg-rose-600 text-white font-sans' : 'bg-[#0E1527] text-slate-200 border border-slate-800 font-sans'
+      }`;
+      toast.innerHTML = `<i class="fa-solid ${status === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'}"></i> ${message}`;
+      container.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      }, 50);
+      
+      setTimeout(() => {
+        toast.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => toast.remove(), 400);
+      }, 4000);
+    }
+
+    // Toggle Mobile Sidebar
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('-translate-x-full');
+    }
+
+    // SPA View Routing
+    const routingTabs = ['dashboard', 'orders', 'add-funds', 'tickets', 'account', 'admin'];
+    function switchTab(viewId) {
+      routingTabs.forEach(tab => {
+        const viewEl = document.getElementById(`view-${tab}`);
+        if(viewEl) viewEl.classList.add('hidden');
+      });
+
+      const activeView = document.getElementById(`view-${viewId}`);
+      if(activeView) activeView.classList.remove('hidden');
+
+      const buttons = document.querySelectorAll('.nav-btn');
+      buttons.forEach(btn => {
+        btn.className = "nav-btn w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50";
+      });
+
+      const activeBtn = document.getElementById(`nav-${viewId}`);
+      if(activeBtn) {
+        activeBtn.className = "nav-btn w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all bg-blue-600 text-white";
+      }
+
+      const sidebar = document.getElementById('sidebar');
+      if(!sidebar.classList.contains('-translate-x-full')) {
+        sidebar.classList.add('-translate-x-full');
+      }
+    }
+
+    // Passwords Controls
+    function togglePasswordVisibility() {
+      const field = document.getElementById('login-password');
+      const icon = document.getElementById('password-toggle-icon');
+      if(field.type === 'password') {
+        field.type = 'text';
+        icon.className = 'fa-regular fa-eye-slash';
+      } else {
+        field.type = 'password';
+        icon.className = 'fa-regular fa-eye';
+      }
+    }
+
+    // Dark/Light Theme Switch
+    function toggleTheme() {
+      const html = document.documentElement;
+      const icon = document.getElementById('theme-icon');
+      if(html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+        icon.className = "fa-solid fa-moon text-lg";
+      } else {
+        html.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+        icon.className = "fa-solid fa-sun text-lg";
+      }
+    }
+
+    // User authentication status observer with race-condition safe initialization
+    auth.onAuthStateChanged(user => {
+      if(user) {
+        localUserState.uid = user.uid;
+        
+        // Check if database reference profile exists once before setting up real-time sync
+        const userRef = database.ref(`users/${user.uid}`);
+        userRef.once('value').then(snapshot => {
+          if (!snapshot.exists()) {
+            const defaultDb = {
+              displayName: user.displayName || "Client User",
+              username: user.email.split('@')[0] + "_" + Math.floor(Math.random() * 100),
+              email: user.email,
+              avatar: user.photoURL || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80",
+              balance: 0.00,
+              spent: 0.00,
+              ordersCount: 0,
+              pendingCount: 0,
+              apiKey: generateHexKey(32)
+            };
+            return userRef.set(defaultDb);
+          }
+        }).then(() => {
+          // Initialize live listener
+          userRef.on('value', snapshot => {
+            const dbUser = snapshot.val();
+            if(!dbUser) return;
+
+            localUserState.balance = parseFloat(dbUser.balance) || 0;
+            localUserState.spent = parseFloat(dbUser.spent) || 0;
+            localUserState.orders = parseInt(dbUser.ordersCount) || 0;
+            localUserState.pending = parseInt(dbUser.pendingCount) || 0;
+            localUserState.displayName = dbUser.displayName || "Client User";
+            localUserState.username = dbUser.username || "client";
+            localUserState.avatar = dbUser.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80";
+
+            // Hydrate HTML UI
+            document.getElementById('header-avatar').src = localUserState.avatar;
+            document.getElementById('acc-avatar-img').src = localUserState.avatar;
+            document.getElementById('header-user-display').innerText = localUserState.displayName;
+            document.getElementById('acc-user-header').innerText = localUserState.displayName;
+            document.getElementById('welcome-user-display').innerText = localUserState.displayName;
+            document.getElementById('header-username-display').innerText = `@${localUserState.username}`;
+            document.getElementById('acc-username-header').innerText = `@${localUserState.username}`;
+            document.getElementById('acc-username-field').value = localUserState.username;
+            document.getElementById('acc-name').value = localUserState.displayName;
+            document.getElementById('acc-email').value = dbUser.email;
+            document.getElementById('api-key-text').innerText = dbUser.apiKey;
+
+            updateClientDashboardCounters();
+          });
+
+          // Live Synchronize User Activity logs, deposits, tickets and orders
+          listenToUserTransactions();
+          listenToLiveLeaderboard();
+          listenToUserTickets();
+          listenToAdminFeeds();
+
+          // Screen transition
+          document.getElementById('login-screen').classList.add('hidden');
+          document.getElementById('app-screen').classList.remove('hidden');
+          renderTable();
+        }).catch(err => {
+          showToast("Database synchronization issue: " + err.message, 'error');
+        });
+      } else {
+        localUserState.uid = null;
+        document.getElementById('app-screen').classList.add('hidden');
+        document.getElementById('login-screen').classList.remove('hidden');
+      }
+    });
+
+    // Hex String Generator
+    function generateHexKey(len) {
+      const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+      let result = '';
+      for (let i = 0; i < len; i++) {
+        result += chars[Math.floor(Math.random() * chars.length)];
+      }
+      return result;
+    }
+
+    // Google Authentication Flow with popup login
+    function handleGoogleLogin() {
+      const popup = document.getElementById('google-loading-popup');
+      popup.classList.remove('hidden');
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider)
+        .then(() => {
+          popup.classList.add('hidden');
+          showToast('Sign-in accomplished with Google account!', 'success');
+        })
+        .catch(err => {
+          popup.classList.add('hidden');
+          showToast(err.message, 'error');
+        });
+    }
+
+    // Email/Password login
+    function handleLogin(event) {
+      event.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const pass = document.getElementById('login-password').value;
+      auth.signInWithEmailAndPassword(email, pass)
+        .then(() => {
+          showToast('Login authorized!', 'success');
+        })
+        .catch(err => {
+          showToast(err.message, 'error');
+        });
+    }
+
+    // Registration Form Controls
+    function openRegisterModal() {
+      document.getElementById('register-modal').classList.remove('hidden');
+    }
+    function closeRegisterModal() {
+      document.getElementById('register-modal').classList.add('hidden');
+    }
+    function handleRegisterSubmit(event) {
+      event.preventDefault();
+      const name = document.getElementById('reg-name').value;
+      const email = document.getElementById('reg-email').value;
+      const pass = document.getElementById('reg-password').value;
+
+      auth.createUserWithEmailAndPassword(email, pass)
+        .then(cred => {
+          return cred.user.updateProfile({
+            displayName: name
+          }).then(() => {
+            const defaultDb = {
+              displayName: name,
+              username: email.split('@')[0],
+              email: email,
+              avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80",
+              balance: 0.00,
+              spent: 0.00,
+              ordersCount: 0,
+              pendingCount: 0,
+              apiKey: generateHexKey(32)
+            };
+            return database.ref(`users/${cred.user.uid}`).set(defaultDb);
+          });
+        })
+        .then(() => {
+          closeRegisterModal();
+          showToast('Account creation successfully completed!', 'success');
+        })
+        .catch(err => {
+          showToast(err.message, 'error');
+        });
+    }
+
+    // Logout
+    function handleLogout() {
+      auth.signOut().then(() => {
+        showToast('Session logged out.');
+        switchTab('dashboard');
+      });
+    }
+
+    // Update locally stored metrics and Star Challenge UI parameters
+    function updateClientDashboardCounters() {
+      document.getElementById('stat-balance').innerText = `৳${localUserState.balance.toFixed(2)}`;
+      document.getElementById('stat-spent').innerText = `৳${localUserState.spent.toFixed(2)}`;
+      document.getElementById('stat-orders').innerText = localUserState.orders;
+      document.getElementById('stat-pending').innerText = localUserState.pending;
+
+      // Challenge mechanics checking
+      const spentValue = localUserState.spent;
+      const progressPercent = Math.min(100, (spentValue / 100) * 100);
+      document.getElementById('mission-progress-text').innerText = `৳${spentValue.toFixed(2)}`;
+      document.getElementById('mission-percentage').innerText = `${Math.floor(progressPercent)}%`;
+      document.getElementById('mission-progress-bar').style.width = `${progressPercent}%`;
+
+      const mCard = document.getElementById('mission-warning-card');
+      const hb = document.getElementById('badge-header-container');
+      const wb = document.getElementById('badge-welcome-container');
+      const ab = document.getElementById('badge-account-container');
+
+      if(spentValue >= 100) {
+        hb.classList.remove('hidden');
+        wb.classList.remove('hidden');
+        ab.classList.remove('hidden');
+        mCard.className = "bg-gradient-to-r from-emerald-950/60 to-slate-950/60 border border-emerald-800/40 p-5 rounded-2xl backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-4";
+        mCard.querySelector('.fa-gift').parentElement.className = "bg-emerald-500/20 text-emerald-400 p-3 rounded-xl text-lg animate-bounce";
+        mCard.querySelector('h4').innerText = "🎉 Premium Star Status Unlocked!";
+        mCard.querySelector('p').innerText = "অভিনন্দন! আপনার ব্লু ব্যাজ সফলভাবে আনলক হয়েছে। প্রতি অর্ডারে ৳১০.০০ ফ্ল্যাট ডিসকাউন্ট অটো-অ্যাপ্লাইড হচ্ছে।";
+      } else {
+        hb.classList.add('hidden');
+        wb.classList.add('hidden');
+        ab.classList.add('hidden');
+      }
+    }
+
+    // Active Category Select filters
+    function filterCategory(cat) {
+      selectedFilterCategory = cat;
+      const buttons = document.querySelectorAll('.cat-btn');
+      buttons.forEach(btn => {
+        btn.className = "cat-btn w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50";
+      });
+      // Set target selection styling
+      event.currentTarget.className = "cat-btn w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-semibold bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400";
+      
+      const filtered = cat === 'All' ? services : services.filter(s => s.category === cat);
+      renderTable(filtered);
+    }
+
+    // Live search queries
+    function handleSearch() {
+      const q = document.getElementById('service-search').value.toLowerCase();
+      let matched = services.filter(s => s.name.toLowerCase().includes(q));
+      if(selectedFilterCategory !== 'All') {
+        matched = matched.filter(s => s.category === selectedFilterCategory);
+      }
+      renderTable(matched);
+    }
+
+    // Hydrate service dynamic table
+    function renderTable(data = services) {
+      const tbody = document.getElementById('services-table-body');
+      tbody.innerHTML = '';
+      if(data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400 font-medium">No services found.</td></tr>`;
+        return;
+      }
+      data.forEach(s => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-all';
+        tr.innerHTML = `
+          <td class="py-4 px-4 font-bold text-slate-400">#${s.id}</td>
+          <td class="py-4 px-4">
+            <div class="flex items-center gap-2.5">
+              <i class="fa-brands ${s.icon} text-base animate-pulse"></i>
+              <span class="font-bold text-slate-700 dark:text-slate-200">${s.name}</span>
+            </div>
+          </td>
+          <td class="py-4 px-4 font-bold text-slate-800 dark:text-white">৳${s.rate.toFixed(2)}</td>
+          <td class="py-4 px-4 text-center font-medium">${s.min}</td>
+          <td class="py-4 px-4 text-center font-medium">${s.max}</td>
+          <td class="py-4 px-4 text-center">
+            <button onclick="openOrderModal(${s.id})" class="bg-blue-50 hover:bg-blue-600 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 hover:text-white text-[11px] font-bold px-3 py-1.5 rounded-xl transition-all">
+              Details
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Synchronize transaction list updates
+    function listenToUserTransactions() {
+      // Fetch dynamic Orders Live
+      database.ref('orders').orderByChild('userId').equalTo(localUserState.uid).on('value', snap => {
+        const container = document.getElementById('orders-log-table');
+        container.innerHTML = '';
+        const data = snap.val() || {};
+        const keys = Object.keys(data).reverse();
+
+        if(keys.length === 0) {
+          container.innerHTML = `<tr id="empty-orders-row"><td colspan="7" class="py-6 text-center text-slate-400 font-medium">No orders placed yet.</td></tr>`;
+          return;
+        }
+
+        let pendingCount = 0;
+        keys.forEach(k => {
+          const item = data[k];
+          if(item.status === 'Pending') pendingCount++;
+          const date = item.timestamp ? new Date(item.timestamp).toLocaleDateString() : 'Just Now';
+          const badgeClass = item.status === 'Completed' ? 'bg-emerald-100 text-emerald-600' :
+                             item.status === 'Cancelled' ? 'bg-rose-100 text-rose-600' : 'bg-amber-100 text-amber-600 animate-pulse';
+
+          container.innerHTML += `
+            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/20">
+              <td class="py-4 px-4 font-bold text-slate-400">#${k.substring(1, 7).toUpperCase()}</td>
+              <td class="py-4 px-4">${date}</td>
+              <td class="py-4 px-4 font-bold text-slate-700 dark:text-slate-200">${item.serviceName}</td>
+              <td class="py-4 px-4 text-blue-500 truncate max-w-xs"><a href="${item.link}" target="_blank">${item.link}</a></td>
+              <td class="py-4 px-4">${item.quantity}</td>
+              <td class="py-4 px-4 font-bold">৳${item.charge.toFixed(2)}</td>
+              <td class="py-4 px-4"><span class="${badgeClass} px-2.5 py-1 rounded-full font-bold text-[10px]">${item.status}</span></td>
+            </tr>
+          `;
+        });
+        database.ref(`users/${localUserState.uid}`).update({
+          ordersCount: keys.length,
+          pendingCount: pendingCount
+        });
+      });
+
+      // Fetch dynamic Deposits Live
+      database.ref('deposits').orderByChild('userId').equalTo(localUserState.uid).on('value', snap => {
+        const container = document.getElementById('deposit-logs-body');
+        container.innerHTML = '';
+        const data = snap.val() || {};
+        const keys = Object.keys(data).reverse();
+
+        if(keys.length === 0) {
+          container.innerHTML = `<tr id="empty-deposits-row"><td colspan="5" class="py-6 text-center text-slate-400 font-medium">No deposit history found.</td></tr>`;
+          return;
+        }
+
+        keys.forEach(k => {
+          const item = data[k];
+          const date = item.timestamp ? new Date(item.timestamp).toLocaleDateString() : 'Just Now';
+          const badgeClass = item.status === 'Approved' ? 'bg-emerald-100 text-emerald-600' :
+                             item.status === 'Rejected' ? 'bg-rose-100 text-rose-600' : 'bg-amber-100 text-amber-600 animate-pulse';
+          
+          container.innerHTML += `
+            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/20">
+              <td class="py-4 px-4 font-mono font-bold text-slate-500">${item.txId}</td>
+              <td class="py-4 px-4">${date}</td>
+              <td class="py-4 px-4">${item.senderNumber}</td>
+              <td class="py-4 px-4 font-bold text-slate-700 dark:text-slate-300">৳${item.amount.toFixed(2)}</td>
+              <td class="py-4 px-4"><span class="${badgeClass} px-2.5 py-1 rounded-full font-bold text-[10px]">${item.status}</span></td>
+            </tr>
+          `;
+        });
+      });
+    }
+
+    // Synchronize Support Ticket requests
+    function listenToUserTickets() {
+      database.ref('tickets').orderByChild('userId').equalTo(localUserState.uid).on('value', snap => {
+        const container = document.getElementById('tickets-history-container');
+        container.innerHTML = '';
+        const data = snap.val() || {};
+        const keys = Object.keys(data).reverse();
+
+        if(keys.length === 0) {
+          container.innerHTML = `<div class="p-4 text-center text-slate-400 text-xs">No active support tickets found.</div>`;
+          return;
+        }
+
+        keys.forEach(k => {
+          const ticket = data[k];
+          const badgeClass = ticket.status === 'Answered' ? 'text-emerald-500' : 'text-blue-500';
+          container.innerHTML += `
+            <div class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-slate-150 dark:border-slate-800 flex justify-between items-center">
+              <div>
+                <h4 class="text-xs font-bold">${ticket.subject}</h4>
+                <p class="text-[10px] text-slate-500 mt-1">${ticket.description}</p>
+                <span class="text-[10px] text-slate-400">Status: <span class="${badgeClass} font-bold">${ticket.status}</span> | Ticket ID: #${k.substring(1, 6).toUpperCase()}</span>
+              </div>
+            </div>
+          `;
+        });
+      });
+    }
+
+    // Submit Support Tickets
+    function handleTicketSubmit(event) {
+      event.preventDefault();
+      const subject = document.getElementById('ticket-subject').value;
+      const msg = document.getElementById('ticket-msg').value;
+
+      const newTicketRef = database.ref('tickets').push();
+      newTicketRef.set({
+        userId: localUserState.uid,
+        userEmail: auth.currentUser.email,
+        subject: subject,
+        description: msg,
+        status: 'Open',
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      }).then(() => {
+        showToast('Support Ticket submitted successfully!', 'success');
+        document.getElementById('ticket-subject').value = '';
+        document.getElementById('ticket-msg').value = '';
+      });
+    }
+
+    // Live Database Leaderboard tracking
+    function listenToLiveLeaderboard() {
+      database.ref('users').on('value', snapshot => {
+        const users = snapshot.val() || {};
+        let list = [];
+        
+        Object.keys(users).forEach(k => {
+          list.push({
+            username: `@${users[k].username}`,
+            spent: parseFloat(users[k].spent) || 0,
+            avatar: users[k].avatar,
+            isMe: k === localUserState.uid
+          });
         });
 
-        function toggleSidebar() {
-            document.getElementById('sidebarPanel').classList.toggle('active');
-            document.getElementById('sidebarOverlay').classList.toggle('active');
+        // Ensure we populate the dashboard with seed data if lists are short
+        const placeholders = ['kaisarvai007', 'bd_provider', 'reseller_king', 'shakib_99', 'tanvir_smm'];
+        for(let i = list.length; i < 20; i++) {
+          list.push({
+            username: `@${placeholders[i % placeholders.length]}_${10 + i}`,
+            spent: Math.max(15, 3500 - (i * 120) + Math.random() * 50),
+            avatar: `https://i.pravatar.cc/100?img=${i + 1}`,
+            isMe: false
+          });
         }
 
-        function toggleLanguage(lang) {
-            currentLang = lang;
-            const dict = TRANSLATIONS[currentLang];
-            document.getElementById('langSelector').value = currentLang;
-            
-            if (authMode === 'login') {
-                document.getElementById('authModeText').innerText = dict.login_title;
-                document.getElementById('authMainBtn').innerText = dict.signin_btn;
-                document.getElementById('toggleAuthText').innerHTML = `${dict.no_acc} <a href="#" class="text-blue-flame fw-bold" style="text-decoration:none;" id="toggleAuthLink" onclick="switchAuthMode(event)">${dict.signup_btn}</a>`;
-            } else {
-                document.getElementById('authModeText').innerText = dict.signup_title;
-                document.getElementById('authMainBtn').innerText = dict.signup_btn;
-                document.getElementById('toggleAuthText').innerHTML = `${dict.have_acc} <a href="#" class="text-blue-flame fw-bold" style="text-decoration:none;" id="toggleAuthLink" onclick="switchAuthMode(event)">${dict.signin_btn}</a>`;
-            }
+        list.sort((a,b) => b.spent - a.spent);
+        const container = document.getElementById('leaderboard-container');
+        container.innerHTML = '';
+        
+        list.slice(0, 20).forEach((user, idx) => {
+          const row = document.createElement('div');
+          row.className = `flex items-center justify-between p-2 rounded-xl border transition-all ${user.isMe ? 'bg-blue-500/10 border-blue-500/30 ring-2 ring-blue-500/20' : 'bg-slate-50/50 dark:bg-slate-900/40 border-slate-100 dark:border-slate-800/40'}`;
+          let rankColor = 'text-slate-400';
+          if(idx === 0) rankColor = 'text-yellow-500';
+          if(idx === 1) rankColor = 'text-slate-300';
+          if(idx === 2) rankColor = 'text-amber-600';
 
-            // Adjust Service Table rate displays based on selected language
-            if (currentLang === 'english') {
-                document.getElementById('srvRateOld').innerText = "$0.0010 USD";
-                document.getElementById('srvRateFuture').innerText = "$0.0008 USD";
-                document.getElementById('referralRewardLabel').innerText = "0.0001 USD";
-                document.getElementById('headerBalanceLabel').innerText = "Available Balance";
-                document.getElementById('statBalanceLabel').innerText = "Balance";
-                document.getElementById('statSpentLabel').innerText = "Total Spent";
-            } else {
-                document.getElementById('srvRateOld').innerText = `${(0.0010 * BDT_TO_USD_RATE).toFixed(4)} ৳`;
-                document.getElementById('srvRateFuture').innerText = `${(0.0008 * BDT_TO_USD_RATE).toFixed(4)} ৳`;
-                document.getElementById('referralRewardLabel').innerText = `${(0.0001 * BDT_TO_USD_RATE).toFixed(4)} ৳`;
-                document.getElementById('headerBalanceLabel').innerText = "চলতি ব্যালেন্স";
-                document.getElementById('statBalanceLabel').innerText = "ব্যালেন্স";
-                document.getElementById('statSpentLabel').innerText = "মোট ব্যয়";
-            }
+          row.innerHTML = `
+            <div class="flex items-center gap-2 overflow-hidden">
+              <span class="text-xs font-black w-4 text-center ${rankColor}">#${idx + 1}</span>
+              <img src="${user.avatar}" class="w-7 h-7 rounded-full object-cover ring-1 ring-blue-500/10">
+              <span class="text-[11px] font-bold truncate text-slate-700 dark:text-slate-300">${user.username}</span>
+            </div>
+            <span class="text-[10px] font-black shrink-0 text-slate-800 dark:text-slate-200">৳${user.spent.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+          `;
+          container.appendChild(row);
+        });
+      });
+    }
 
-            switchDepositMethod(currentPaymentMethod);
-            calculateViewsCost();
-            updateUI();
-        }
+    // Account updates
+    function handleAccountUpdate(event) {
+      event.preventDefault();
+      const updatedName = document.getElementById('acc-name').value;
+      const updatedUsername = document.getElementById('acc-username-field').value;
 
-        function showPage(pageId) {
-            const views = document.querySelectorAll('.page-view');
-            views.forEach(v => v.style.display = 'none');
-            
-            const navItems = document.querySelectorAll('.nav-menu-item');
-            navItems.forEach(n => n.classList.remove('active'));
+      database.ref(`users/${localUserState.uid}`).update({
+        displayName: updatedName,
+        username: updatedUsername
+      }).then(() => {
+        showToast('Your Profile has been customized successfully!', 'success');
+      });
+    }
 
-            if (pageId === 'views') {
-                document.getElementById('sectionViews').style.display = 'block';
-                document.getElementById('btnPageViews').classList.add('active');
-            } else if (pageId === 'mass') {
-                document.getElementById('sectionMass').style.display = 'block';
-                document.getElementById('btnPageMassOrder').classList.add('active');
-            } else if (pageId === 'services') {
-                document.getElementById('sectionServices').style.display = 'block';
-                document.getElementById('btnPageServices').classList.add('active');
-            } else if (pageId === 'orders') {
-                document.getElementById('sectionOrders').style.display = 'block';
-                document.getElementById('btnPageOrders').classList.add('active');
-            } else if (pageId === 'refunds') {
-                document.getElementById('sectionRefunds').style.display = 'block';
-                document.getElementById('btnPageRefunds').classList.add('active');
-            } else if (pageId === 'support') {
-                document.getElementById('sectionSupport').style.display = 'block';
-                document.getElementById('btnPageSupport').classList.add('active');
-            } else if (pageId === 'deposit') {
-                document.getElementById('sectionDeposit').style.display = 'block';
-                document.getElementById('btnPageDeposit').classList.add('active');
-            } else if (pageId === 'api') {
-                document.getElementById('sectionAPI').style.display = 'block';
-                document.getElementById('btnPageAPI').classList.add('active');
-            } else if (pageId === 'terms') {
-                document.getElementById('sectionTerms').style.display = 'block';
-                document.getElementById('btnPageTerms').classList.add('active');
-            } else if (pageId === 'updates') {
-                document.getElementById('sectionUpdates').style.display = 'block';
-                document.getElementById('btnPageUpdates').classList.add('active');
-            } else if (pageId === 'refer') {
-                document.getElementById('sectionRefer').style.display = 'block';
-                document.getElementById('btnPageRefer').classList.add('active');
-            } else if (pageId === 'contact') {
-                document.getElementById('sectionContact').style.display = 'block';
-                document.getElementById('btnPageContact').classList.add('active');
-            } else if (pageId === 'admin') {
-                document.getElementById('sectionAdmin').style.display = 'block';
-            }
+    // Avatar upload conversions
+    function uploadAvatar(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          database.ref(`users/${localUserState.uid}`).update({
+            avatar: e.target.result
+          }).then(() => {
+            showToast('Profile image updated successfully!', 'success');
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+    }
 
-            document.getElementById('sidebarPanel').classList.remove('active');
-            document.getElementById('sidebarOverlay').classList.remove('active');
-        }
+    // API key copier
+    function copyApiKey() {
+      const k = document.getElementById('api-key-text').innerText;
+      navigator.clipboard.writeText(k).then(() => {
+        showToast('API Key copied to clipboard!', 'success');
+      });
+    }
+    function regenerateApiKey() {
+      const newKey = generateHexKey(32);
+      database.ref(`users/${localUserState.uid}`).update({
+        apiKey: newKey
+      }).then(() => {
+        showToast('Developer API Key regenerated successfully!', 'success');
+      });
+    }
 
-        // --- AUTHENTICATION GATEWAY ---
-        function switchAuthMode(e) {
-            e.preventDefault();
-            const emailContainer = document.getElementById('signUpEmailContainer');
-            const referContainer = document.getElementById('signUpReferralContainer');
-            const userFieldLabel = document.getElementById('userFieldLabel');
-            const toggleAuthText = document.getElementById('toggleAuthText');
-            const dict = TRANSLATIONS[currentLang];
+    // Number copier
+    function copyNumber(num) {
+      navigator.clipboard.writeText(num).then(() => {
+        showToast('bKash wallet number copied successfully!', 'success');
+      });
+    }
 
-            if (authMode === 'login') {
-                authMode = 'signup';
-                document.getElementById('authModeText').innerText = dict.signup_title;
-                emailContainer.style.display = 'block';
-                referContainer.style.display = 'block';
-                userFieldLabel.innerText = dict.user_lbl;
-                document.getElementById('authMainBtn').innerText = dict.signup_btn;
-                toggleAuthText.innerHTML = `${dict.have_acc} <a href="#" class="text-blue-flame fw-bold" id="toggleAuthLink" onclick="switchAuthMode(event)">${dict.signin_btn}</a>`;
-            } else {
-                authMode = 'login';
-                document.getElementById('authModeText').innerText = dict.login_title;
-                emailContainer.style.display = 'none';
-                referContainer.style.display = 'none';
-                userFieldLabel.innerText = "Username or Email";
-                document.getElementById('authMainBtn').innerText = dict.signin_btn;
-                toggleAuthText.innerHTML = `${dict.no_acc} <a href="#" class="text-blue-flame fw-bold" id="toggleAuthLink" onclick="switchAuthMode(event)">${dict.signup_btn}</a>`;
-            }
-        }
+    // Currency updates
+    function calculateAddFundsConversion() {
+      const input = parseFloat(document.getElementById('tx-amount').value) || 0;
+      document.getElementById('tx-converted-usd').value = input > 0 ? `${input.toFixed(2)}` : '0.00';
+    }
 
-        function handleAuthSubmit(e) {
-            e.preventDefault();
-            const usernameInput = document.getElementById('authUsername').value.trim();
-            const passwordInput = document.getElementById('authPassword').value;
+    // Transaction submit request
+    function handleTransactionSubmit(event) {
+      event.preventDefault();
+      const sender = document.getElementById('tx-sender').value;
+      const amount = parseFloat(document.getElementById('tx-amount').value) || 0;
+      const txid = document.getElementById('tx-id').value.trim().toUpperCase();
 
-            if (authMode === 'signup') {
-                const emailInput = document.getElementById('authEmail').value.trim();
-                const referrerCodeInput = document.getElementById('authReferralInput').value.trim();
+      if(amount < 100) {
+        showToast('Error: Minimum deposit transaction value must be 100 BDT.', 'error');
+        return;
+      }
 
-                if (!usernameInput || !passwordInput || !emailInput) {
-                    showToast('❌ All fields are required for registration');
-                    return;
-                }
+      const submitBtn = document.getElementById('deposit-submit-btn');
+      const btnText = document.getElementById('btn-deposit-text');
+      const spinner = document.getElementById('btn-deposit-spinner');
 
-                if (registeredUsers[usernameInput.toLowerCase()]) {
-                    showToast('❌ Username is already registered');
-                    return;
-                }
+      submitBtn.disabled = true;
+      btnText.classList.add('hidden');
+      spinner.classList.remove('hidden');
 
-                const emailExists = Object.values(registeredUsers).some(u => u.email.toLowerCase() === emailInput.toLowerCase());
-                if (emailExists) {
-                    showToast('❌ Email is already registered');
-                    return;
-                }
+      const depositRef = database.ref('deposits').push();
+      depositRef.set({
+        userId: localUserState.uid,
+        userEmail: auth.currentUser.email,
+        username: localUserState.username,
+        senderNumber: sender,
+        amount: amount,
+        txId: txid,
+        status: 'Pending',
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      }).then(() => {
+        submitBtn.disabled = false;
+        btnText.classList.remove('hidden');
+        spinner.classList.add('hidden');
 
-                const generatedReferralCode = 'REF-' + Math.random().toString(36).substr(2, 6).toUpperCase();
-                
-                const newUserProfile = {
-                    username: usernameInput,
-                    email: emailInput,
-                    password: passwordInput,
-                    balance: 0.00, // Starts at 0 USD
-                    spent: 0.00,
-                    referralCode: generatedReferralCode,
-                    referrals: 0,
-                    orders: []
-                };
+        showToast('পেমেন্ট রিকোয়েস্ট সফলভাবে সাবমিট করা হয়েছে। এডমিন ভেরিফাই করে অ্যাপ্রুভ করবেন!', 'success');
+        document.getElementById('tx-sender').value = '';
+        document.getElementById('tx-amount').value = '';
+        document.getElementById('tx-id').value = '';
+        document.getElementById('tx-converted-usd').value = '';
+      }).catch(err => {
+        submitBtn.disabled = false;
+        btnText.classList.remove('hidden');
+        spinner.classList.add('hidden');
+        showToast(err.message, 'error');
+      });
+    }
 
-                // Validate Referral code
-                if (referrerCodeInput) {
-                    let foundReferrer = null;
-                    for (let key in registeredUsers) {
-                        if (registeredUsers[key].referralCode.toUpperCase() === referrerCodeInput.toUpperCase()) {
-                            foundReferrer = registeredUsers[key];
-                            break;
-                        }
-                    }
+    // Modal display controls
+    function openOrderModal(serviceId = null) {
+      document.getElementById('order-modal').classList.remove('hidden');
+      if(serviceId) {
+        const item = services.find(s => s.id === serviceId);
+        document.getElementById('modal-category').value = item.category;
+        populateModalServices();
+        document.getElementById('modal-service').value = item.id;
+        updateServiceDetails();
+      } else {
+        document.getElementById('modal-category').selectedIndex = 0;
+        populateModalServices();
+      }
+    }
+    function closeOrderModal() {
+      document.getElementById('order-modal').classList.add('hidden');
+    }
+    function populateModalServices() {
+      const selectedCat = document.getElementById('modal-category').value;
+      const selector = document.getElementById('modal-service');
+      selector.innerHTML = '';
+      services.filter(s => s.category === selectedCat).forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.id;
+        opt.innerText = s.name;
+        selector.appendChild(opt);
+      });
+      updateServiceDetails();
+    }
+    function updateServiceDetails() {
+      const targetId = parseInt(document.getElementById('modal-service').value);
+      const matched = services.find(s => s.id === targetId);
+      if(matched) {
+        document.getElementById('modal-rate').innerText = `৳${matched.rate.toFixed(2)}`;
+        const qInput = document.getElementById('modal-quantity');
+        qInput.min = matched.min;
+        qInput.placeholder = `Min: ${matched.min}`;
+        calculateCost();
+      }
+    }
+    function calculateCost() {
+      const matchedId = parseInt(document.getElementById('modal-service').value);
+      const matched = services.find(s => s.id === matchedId);
+      const qty = parseInt(document.getElementById('modal-quantity').value) || 0;
 
-                    if (foundReferrer) {
-                        foundReferrer.balance += REFER_REWARD_USD;
-                        foundReferrer.referrals += 1;
-                        
-                        foundReferrer.orders.unshift({
-                            id: 'REF-' + Math.random().toString(36).substr(2, 6).toUpperCase(),
-                            link: `Referral Award: ${usernameInput}`,
-                            quantity: 1,
-                            cost: -REFER_REWARD_USD,
-                            status: 'Completed',
-                            time: new Date().toLocaleString()
-                        });
+      const tag = document.getElementById('modal-discount-tag');
+      const finalInput = document.getElementById('modal-cost');
 
-                        showToast(`🎉 Referral verified! Referral bonus credited to ${foundReferrer.username}`);
-                    } else {
-                        showToast('⚠️ Referral code not found. Account created with standard status.');
-                    }
-                }
+      if(!matched || qty <= 0) {
+        finalInput.value = '0.00';
+        tag.innerText = '৳0.00';
+        return;
+      }
 
-                // Register profile and set active session
-                registeredUsers[usernameInput.toLowerCase()] = newUserProfile;
-                currentSessionUser = newUserProfile;
-                showToast('🎉 Account registered successfully!');
-                
-                // Reset signup fields
-                document.getElementById('authEmail').value = '';
-                document.getElementById('authReferralInput').value = '';
+      const raw = (qty * matched.rate) / 1000;
+      let discount = 0.00;
+      if(localUserState.spent >= 100) {
+        discount = 10.00;
+        tag.innerText = `-৳10.00`;
+        tag.className = "font-black text-emerald-500 animate-pulse";
+      } else {
+        tag.innerText = 'Locked';
+        tag.className = "text-[10px] font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded";
+      }
 
-            } else {
-                // Login Flow: Lookup by username key first, fallback to searching emails
-                let account = registeredUsers[usernameInput.toLowerCase()];
-                if (!account) {
-                    account = Object.values(registeredUsers).find(u => u.email.toLowerCase() === usernameInput.toLowerCase());
-                }
+      const calculated = Math.max(0, raw - discount);
+      finalInput.value = calculated.toFixed(2);
+    }
 
-                if (account && account.password === passwordInput) {
-                    currentSessionUser = account;
-                    showToast('👋 Welcome back!');
-                } else {
-                    showToast('❌ Invalid login credentials');
-                    return;
-                }
-            }
+    // Place persistent Client orders
+    function handlePlaceOrder(event) {
+      event.preventDefault();
+      const selectedId = parseInt(document.getElementById('modal-service').value);
+      const serviceObj = services.find(s => s.id === selectedId);
+      const qty = parseInt(document.getElementById('modal-quantity').value) || 0;
+      const link = document.getElementById('modal-link').value;
+      const cost = parseFloat(document.getElementById('modal-cost').value) || 0;
 
-            // Clear login inputs on success
-            document.getElementById('authUsername').value = '';
-            document.getElementById('authPassword').value = '';
+      if(cost > localUserState.balance) {
+        showToast('Error: পর্যাপ্ত ব্যালেন্স নেই! দয়া করে ব্যালেন্স এড করুন।', 'error');
+        return;
+      }
 
-            document.getElementById('authScreen').style.display = 'none';
-            document.getElementById('appDashboard').style.display = 'block';
-            
-            showPage('views');
-            updateUI();
-            updateAdminPanel();
-        }
+      // Deduct client balance and update parameters
+      const newBalance = localUserState.balance - cost;
+      const newSpent = localUserState.spent + cost;
 
-        function handleGoogleLogin() {
-            const gUser = "Google_Guest";
-            if (!registeredUsers[gUser]) {
-                registeredUsers[gUser] = {
-                    username: "Google_Guest",
-                    email: "gmail@google.com",
-                    balance: 0.00, 
-                    spent: 0.00,
-                    referralCode: 'REF-GGL777',
-                    referrals: 0,
-                    orders: []
-                };
-            }
-            currentSessionUser = registeredUsers[gUser];
-            showToast('👋 Google authentication successful!');
-            
-            document.getElementById('authScreen').style.display = 'none';
-            document.getElementById('appDashboard').style.display = 'block';
-            showPage('views');
-            updateUI();
-            updateAdminPanel();
-        }
+      database.ref(`users/${localUserState.uid}`).update({
+        balance: newBalance,
+        spent: newSpent
+      }).then(() => {
+        const orderRef = database.ref('orders').push();
+        orderRef.set({
+          userId: localUserState.uid,
+          userEmail: auth.currentUser.email,
+          username: localUserState.username,
+          serviceId: selectedId,
+          serviceName: serviceObj.name,
+          link: link,
+          quantity: qty,
+          charge: cost,
+          status: 'Pending',
+          timestamp: firebase.database.ServerValue.TIMESTAMP
+        }).then(() => {
+          showToast('অর্ডার সফলভাবে সম্পন্ন হয়েছে! ID: #' + orderRef.key.substring(1,7).toUpperCase(), 'success');
+          document.getElementById('modal-link').value = '';
+          document.getElementById('modal-quantity').value = '';
+          document.getElementById('modal-cost').value = '0.00';
+          closeOrderModal();
+        });
+      });
+    }
 
-        function handleLogout() {
-            currentSessionUser = null;
-            showToast('🔒 Session terminated.');
-            document.getElementById('appDashboard').style.display = 'none';
-            document.getElementById('authScreen').style.display = 'flex';
-        }
+    // Workspace layout toggle to Admin Desk view
+    function toggleAdminView() {
+      const modeBtn = document.getElementById('admin-mode-btn');
+      if(!isAdminActive) {
+        isAdminActive = true;
+        modeBtn.className = "w-full bg-blue-600/20 border border-blue-500/30 text-blue-400 hover:bg-blue-600/30 font-bold py-2.5 px-4 rounded-xl text-xs transition-all flex items-center justify-center gap-2";
+        modeBtn.innerHTML = `<i class="fa-solid fa-user"></i> Close Admin Panel`;
+        switchTab('admin');
+      } else {
+        isAdminActive = false;
+        modeBtn.className = "w-full bg-amber-600/20 border border-amber-500/30 text-amber-400 hover:bg-amber-600/30 font-bold py-2.5 px-4 rounded-xl text-xs transition-all flex items-center justify-center gap-2";
+        modeBtn.innerHTML = `<i class="fa-solid fa-user-shield"></i> Open Admin Panel`;
+        switchTab('dashboard');
+      }
+    }
 
-        // --- VIEWS CALCULATIONS & ORDER PROCESS ---
-        function onViewsCategoryChange() {
-            const selectKey = document.getElementById('viewsCategory').value;
-            const service = VIEW_SERVICES[selectKey];
-            if (service) {
-                document.getElementById('viewsDescription').innerText = service.description;
-                document.getElementById('viewsQuantity').min = service.min;
-                calculateViewsCost();
-            }
-        }
+    // Administrative observer nodes
+    function listenToAdminFeeds() {
+      // Pending deposits
+      database.ref('deposits').on('value', snapshot => {
+        const tableBody = document.getElementById('admin-deposits-table-body');
+        tableBody.innerHTML = '';
+        const raw = snapshot.val() || {};
+        let count = 0;
 
-        function calculateViewsCost() {
-            const selectKey = document.getElementById('viewsCategory').value;
-            const service = VIEW_SERVICES[selectKey];
-            let qty = parseInt(document.getElementById('viewsQuantity').value);
-            
-            if (isNaN(qty) || qty < service.min) {
-                qty = service.min;
-            }
-
-            const costUSD = (qty / 10) * service.ratePerTen;
-
-            if (currentLang === 'english') {
-                document.getElementById('viewsCostDisplay').innerText = `$ ${costUSD.toFixed(5)} USD`;
-            } else {
-                const costBDT = costUSD * BDT_TO_USD_RATE;
-                document.getElementById('viewsCostDisplay').innerText = `${costBDT.toFixed(4)} ৳`;
-            }
-            return { costUSD };
-        }
-
-        function handlePlaceViewsOrder(e) {
-            e.preventDefault();
-            const selectKey = document.getElementById('viewsCategory').value;
-            const service = VIEW_SERVICES[selectKey];
-            const link = document.getElementById('viewsLink').value.trim();
-            const qty = parseInt(document.getElementById('viewsQuantity').value);
-
-            if (isNaN(qty) || qty < service.min) {
-                showToast(`❌ Minimum order limit is ${service.min}`);
-                return;
-            }
-
-            const { costUSD } = calculateViewsCost();
-
-            if (currentSessionUser.balance < costUSD) {
-                showToast('❌ Insufficient balance for this transaction');
-                return;
-            }
-
-            currentSessionUser.balance -= costUSD;
-            currentSessionUser.spent += costUSD;
-
-            const orderId = 'ORD-' + Math.random().toString(36).substr(2, 8).toUpperCase();
-            const newOrder = {
-                id: orderId,
-                username: currentSessionUser.username,
-                service: service.name,
-                quantity: qty,
-                costUSD: costUSD,
-                link: link,
-                status: 'Pending',
-                time: new Date().toLocaleString()
-            };
-
-            adminPendingOrders.push(newOrder);
-
-            currentSessionUser.orders.unshift({
-                id: orderId,
-                link: `${service.name}: ${link}`,
-                quantity: qty,
-                cost: costUSD,
-                status: 'Pending',
-                time: new Date().toLocaleString()
-            });
-
-            document.getElementById('viewsLink').value = '';
-            document.getElementById('viewsQuantity').value = service.min;
-            calculateViewsCost();
-
-            showToast('🎉 Order placed successfully!');
-            updateUI();
-            updateAdminPanel();
-        }
-
-        // --- MANUAL DEPOSIT SYSTEM ---
-        function switchDepositMethod(method) {
-            currentPaymentMethod = method;
-            const tabButtons = document.querySelectorAll('#depTab .nav-link');
-            tabButtons.forEach(btn => btn.classList.remove('active'));
-            
-            if (method === 'bkash') {
-                tabButtons[0].classList.add('active');
-                document.getElementById('depInstructions').innerHTML = 'Send money (Personal) to bKash number <strong>01860909272</strong>, then submit transaction details below.';
-                if (currentLang === 'english') {
-                    document.getElementById('depAmountLabel').innerText = 'Deposit Amount (converted to BDT)';
-                } else {
-                    document.getElementById('depAmountLabel').innerText = 'ডিপোজিট পরিমাণ (টাকা)';
-                }
-            } else {
-                tabButtons[1].classList.add('active');
-                document.getElementById('depInstructions').innerHTML = 'Transfer USD to Binance Pay ID: <strong>907791817</strong>. Submit transaction details below.';
-                if (currentLang === 'english') {
-                    document.getElementById('depAmountLabel').innerText = 'Deposit Amount (USD)';
-                } else {
-                    document.getElementById('depAmountLabel').innerText = 'ডিপোজিট পরিমাণ (ডলার)';
-                }
-            }
-        }
-
-        function handleDepositSubmission() {
-            const rawAmount = parseFloat(document.getElementById('depAmount').value);
-            const txId = document.getElementById('depTxId').value.trim();
-
-            if (isNaN(rawAmount) || rawAmount <= 0) {
-                showToast('❌ Enter valid deposit amount');
-                return;
-            }
-
-            if (!txId || txId.length < 5) {
-                showToast('❌ Please verify your transaction code sequence');
-                return;
-            }
-
-            let inputAmountInUSD = 0;
-            if (currentPaymentMethod === 'bkash') {
-                // bKash payments are input as BDT, convert to internal USD database state
-                inputAmountInUSD = rawAmount / BDT_TO_USD_RATE;
-            } else {
-                // Binance payments are input directly in USD
-                inputAmountInUSD = rawAmount;
-            }
-
-            // Enforce minimum transaction limit of 0.43 USD (~50 BDT)
-            if (inputAmountInUSD < 0.43) {
-                showToast(currentLang === 'english' ? '❌ Minimum deposit limit is $0.43 USD' : '❌ সর্বনিম্ন ডিপোজিট ৫০ টাকা');
-                return;
-            }
-
-            const depId = currentPaymentMethod.toUpperCase() + '-' + txId.toUpperCase();
-            
-            const newDepositRequest = {
-                id: depId,
-                username: currentSessionUser.username,
-                amountUSD: inputAmountInUSD,
-                txId: txId,
-                method: currentPaymentMethod === 'bkash' ? 'bKash Deposit' : 'Binance Pay Deposit',
-                status: 'Pending',
-                time: new Date().toLocaleString()
-            };
-
-            adminPendingDeposits.push(newDepositRequest);
-
-            currentSessionUser.orders.unshift({
-                id: depId,
-                link: `${newDepositRequest.method} Request`,
-                quantity: 1,
-                cost: -inputAmountInUSD, // negative indicates credit request
-                status: 'Pending',
-                time: new Date().toLocaleString()
-            });
-
-            document.getElementById('depAmount').value = '';
-            document.getElementById('depTxId').value = '';
-
-            showToast('⏳ Ticket submitted! Admin will verify and add balance.');
-            updateUI();
-            updateAdminPanel();
-        }
-
-        function handleTicketSubmit() {
-            const subject = document.getElementById('ticketSubject').value.trim();
-            const msg = document.getElementById('ticketMsg').value.trim();
-            if (!subject || !msg) {
-                showToast('⚠️ Subject and description details are required');
-                return;
-            }
-            showToast('📨 Support ticket received! We will respond shortly.');
-            document.getElementById('ticketSubject').value = '';
-            document.getElementById('ticketMsg').value = '';
-        }
-
-        // --- DASHBOARD UI UPDATES ---
-        function updateUI() {
-            if (!currentSessionUser) return;
-
-            document.getElementById('headerBalanceDisplay').innerText = formatCurrency(currentSessionUser.balance);
-            document.getElementById('sbUsername').innerText = currentSessionUser.username;
-
-            document.getElementById('statBalance').innerText = formatCurrency(currentSessionUser.balance);
-            document.getElementById('statSpent').innerText = formatCurrency(currentSessionUser.spent);
-            document.getElementById('statOrders').innerText = currentSessionUser.orders.length;
-
-            document.getElementById('displayReferralCode').innerText = currentSessionUser.referralCode;
-            document.getElementById('refCount').innerText = currentSessionUser.referrals;
-
-            const tableBody = document.getElementById('ordersTableBody');
-            if (currentSessionUser.orders.length > 0) {
-                tableBody.innerHTML = currentSessionUser.orders.map(order => {
-                    const isDeposit = order.cost < 0;
-                    const val = Math.abs(order.cost);
-                    const costText = isDeposit 
-                        ? `<span class="text-success">+${formatCurrency(val)}</span>` 
-                        : `<span class="text-danger">-${formatCurrency(val)}</span>`;
-                    
-                    const statusClass = order.status === 'Completed' ? 'bg-success' 
-                        : (order.status === 'Pending' ? 'bg-warning text-dark' : 'bg-danger');
-
-                    return `
-                        <tr>
-                            <td><code>${order.id}</code></td>
-                            <td class="text-truncate" style="max-width: 140px;" title="${order.link}">${order.link}</td>
-                            <td>${costText}</td>
-                            <td><span class="badge ${statusClass}">${order.status}</span></td>
-                        </tr>
-                    `;
-                }).join('');
-            } else {
-                tableBody.innerHTML = `<tr><td colspan="4" class="text-center text-muted small py-4">${TRANSLATIONS[currentLang].no_orders}</td></tr>`;
-            }
-        }
-
-        function showToast(msg) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = 'custom-toast';
-            toast.innerHTML = `
-                <span>${msg}</span>
-                <button class="btn-close btn-close-white ms-3" onclick="this.parentElement.remove()"></button>
+        Object.keys(raw).forEach(k => {
+          const dep = raw[k];
+          if(dep.status === 'Pending') {
+            count++;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td class="py-4 px-4">
+                <div class="font-bold text-slate-700 dark:text-slate-200">@${dep.username}</div>
+                <div class="text-[9px] text-slate-400 font-mono">${dep.userEmail}</div>
+              </td>
+              <td class="py-4 px-4 font-mono font-bold text-amber-500">${dep.txId}</td>
+              <td class="py-4 px-4 font-black text-slate-800 dark:text-white">৳${dep.amount.toFixed(2)}</td>
+              <td class="py-4 px-4 text-center space-x-1">
+                <button onclick="adminActionApproveDeposit('${k}', '${dep.userId}', ${dep.amount})" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] px-2.5 py-1.5 rounded-lg transition-all font-bold">Approve</button>
+                <button onclick="adminActionRejectDeposit('${k}')" class="bg-rose-600 hover:bg-rose-700 text-white text-[10px] px-2.5 py-1.5 rounded-lg transition-all font-bold">Reject</button>
+              </td>
             `;
-            container.appendChild(toast);
-            setTimeout(() => { toast.remove(); }, 4000);
+            tableBody.appendChild(tr);
+          }
+        });
+
+        if(count === 0) {
+          tableBody.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-slate-400 font-medium">No pending deposit verification request.</td></tr>`;
         }
+      });
 
-        function formatCurrency(valInUSD) {
-            if (currentLang === 'english') {
-                return `$ ${valInUSD.toFixed(4)} USD`;
-            } else {
-                const valInBDT = valInUSD * BDT_TO_USD_RATE;
-                return `${valInBDT.toFixed(2)} ৳`;
-            }
+      // Active client pipeline orders
+      database.ref('orders').on('value', snapshot => {
+        const tableBody = document.getElementById('admin-orders-table-body');
+        tableBody.innerHTML = '';
+        const raw = snapshot.val() || {};
+        let count = 0;
+
+        Object.keys(raw).forEach(k => {
+          const ord = raw[k];
+          if(ord.status === 'Pending') {
+            count++;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td class="py-4 px-4">
+                <div class="font-bold text-slate-700 dark:text-slate-200">@${ord.username}</div>
+                <div class="text-[9px] text-slate-400 font-mono">${ord.userEmail}</div>
+              </td>
+              <td class="py-4 px-4 max-w-[120px] truncate">
+                <div class="font-bold">${ord.serviceName}</div>
+                <div class="text-[9px] text-blue-400 truncate">${ord.link}</div>
+              </td>
+              <td class="py-4 px-4 font-bold text-slate-800 dark:text-white">৳${ord.charge.toFixed(2)}</td>
+              <td class="py-4 px-4 text-center space-x-1">
+                <button onclick="adminActionCompleteOrder('${k}')" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] px-2.5 py-1.5 rounded-lg transition-all font-bold">Complete</button>
+                <button onclick="adminActionCancelOrder('${k}', '${ord.userId}', ${ord.charge})" class="bg-rose-600 hover:bg-rose-700 text-white text-[10px] px-2.5 py-1.5 rounded-lg transition-all font-bold">Cancel & Refund</button>
+              </td>
+            `;
+            tableBody.appendChild(tr);
+          }
+        });
+
+        if(count === 0) {
+          tableBody.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-slate-400 font-medium">No pending client order requests.</td></tr>`;
         }
+      });
+    }
 
-        // --- BACKEND ADMIN ROUTER ---
-        function updateAdminPanel() {
-            const depQ = document.getElementById('adminDepositQueue');
-            const ordQ = document.getElementById('adminOrderQueue');
+    // Administrative action workflows
+    function adminActionApproveDeposit(depId, clientUid, amount) {
+      database.ref(`deposits/${depId}`).update({ status: 'Approved' }).then(() => {
+        database.ref(`users/${clientUid}/balance`).transaction(currentBal => {
+          return (parseFloat(currentBal) || 0) + amount;
+        }).then(() => {
+          showToast('Deposit successfully approved! Balance has been credited.', 'success');
+        });
+      });
+    }
 
-            if (adminPendingDeposits.length > 0) {
-                depQ.innerHTML = adminPendingDeposits.map((dep, idx) => `
-                    <tr>
-                        <td><code>${dep.id}</code></td>
-                        <td>${dep.username}</td>
-                        <td>$${dep.amountUSD.toFixed(4)}</td>
-                        <td>
-                            <button class="btn btn-sm btn-success py-0 px-1" onclick="resolveDeposit(${idx}, true)"><i class="fa-solid fa-check"></i></button>
-                            <button class="btn btn-sm btn-danger py-0 px-1" onclick="resolveDeposit(${idx}, false)"><i class="fa-solid fa-xmark"></i></button>
-                        </td>
-                    </tr>
-                `).join('');
-            } else {
-                depQ.innerHTML = `<tr><td colspan="4" class="text-center text-muted small">No pending items</td></tr>`;
-            }
+    // Reject Deposit
+    function adminActionRejectDeposit(depId) {
+      database.ref(`deposits/${depId}`).update({ status: 'Rejected' }).then(() => {
+        showToast('Payment verification request rejected successfully.');
+      });
+    }
 
-            if (adminPendingOrders.length > 0) {
-                ordQ.innerHTML = adminPendingOrders.map((ord, idx) => `
-                    <tr>
-                        <td><code>${ord.id}</code></td>
-                        <td>${ord.username}</td>
-                        <td>$${ord.costUSD.toFixed(4)}</td>
-                        <td>
-                            <button class="btn btn-sm btn-success py-0 px-1" onclick="resolveOrder(${idx}, true)"><i class="fa-solid fa-check"></i></button>
-                            <button class="btn btn-sm btn-danger py-0 px-1" onclick="resolveOrder(${idx}, false)"><i class="fa-solid fa-xmark"></i></button>
-                        </td>
-                    </tr>
-                `).join('');
-            } else {
-                ordQ.innerHTML = `<tr><td colspan="4" class="text-center text-muted small">No pending items</td></tr>`;
-            }
-        }
+    // Complete Order
+    function adminActionCompleteOrder(orderId) {
+      database.ref(`orders/${orderId}`).update({ status: 'Completed' }).then(() => {
+        showToast('Target client order status marked Completed!', 'success');
+      });
+    }
 
-        function resolveDeposit(idx, approved) {
-            const dep = adminPendingDeposits[idx];
-            if (!dep) return;
+    // Cancel Order
+    function adminActionCancelOrder(orderId, clientUid, amount) {
+      database.ref(`orders/${orderId}`).update({ status: 'Cancelled' }).then(() => {
+        database.ref(`users/${clientUid}`).get().then(snapshot => {
+          if(snapshot.exists()) {
+            const data = snapshot.val();
+            const originalBal = parseFloat(data.balance) || 0;
+            const originalSpent = parseFloat(data.spent) || 0;
+            
+            database.ref(`users/${clientUid}`).update({
+              balance: originalBal + amount,
+              spent: Math.max(0, originalSpent - amount)
+            }).then(() => {
+              showToast('Target order cancelled. Charged amount refunded successfully!', 'success');
+            });
+          }
+        });
+      });
+    }
 
-            const targetUser = registeredUsers[dep.username.toLowerCase()];
-            if (targetUser) {
-                const userOrder = targetUser.orders.find(o => o.id === dep.id);
-                
-                if (approved) {
-                    targetUser.balance += dep.amountUSD;
-                    if (userOrder) {
-                        userOrder.status = 'Completed';
-                    }
-                    showToast(`✅ Deposit approved. Added $${dep.amountUSD.toFixed(4)} USD to ${dep.username}`);
-                } else {
-                    if (userOrder) {
-                        userOrder.status = 'Rejected';
-                    }
-                    showToast(`❌ Deposit request rejected for ${dep.username}`);
-                }
-            }
-
-            adminPendingDeposits.splice(idx, 1);
-            updateUI();
-            updateAdminPanel();
-        }
-
-        function resolveOrder(idx, approved) {
-            const ord = adminPendingOrders[idx];
-            if (!ord) return;
-
-            const targetUser = registeredUsers[ord.username.toLowerCase()];
-            if (targetUser) {
-                const userOrder = targetUser.orders.find(o => o.id === ord.id);
-
-                if (approved) {
-                    if (userOrder) {
-                        userOrder.status = 'Completed';
-                    }
-                    showToast(`✅ Order ${ord.id} completed`);
-                } else {
-                    targetUser.balance += ord.costUSD;
-                    targetUser.spent = Math.max(0, targetUser.spent - ord.costUSD);
-                    if (userOrder) {
-                        userOrder.status = 'Rejected';
-                    }
-                    showToast(`❌ Order rejected. Refunded $${ord.costUSD.toFixed(4)} USD to ${ord.username}`);
-                }
-            }
-
-            adminPendingOrders.splice(idx, 1);
-            updateUI();
-            updateAdminPanel();
-        }
-    </script>
-</body>rgetUser.orders.find(o => o.id === ord.id);
-
-                if (approved) {
-                    if (userOrder) {
-                        userOrder.status = 'Completed';
-                    }
-                    showToast(`✅ Order ${ord.id} completed`);
-                } else {
-                    targetUser.balance += ord.costUSD;
-                    targetUser.spent = Math.max(0, targetUser.spent - ord.costUSD);
-                    if (userOrder) {
-                        userOrder.status = 'Rejected';
-                    }
-                    showToast(`❌ Order rejected. Refunded $${ord.costUSD.toFixed(4)} USD to ${ord.username}`);
-                }
-            }
-
-            adminPendingOrders.splice(idx, 1);
-            updateUI();
-            updateAdminPanel();
-        }
-    </script>
-</body>rgetUser.orders.find(o => o.id === ord.id);
-
-                if (approved) {
-                    if (userOrder) {
-                        userOrder.status = 'Completed';
-                    }
-                    showToast(`✅ Order ${ord.id} completed`);
-                } else {
-                    targetUser.balance += ord.costUSD;
-                    targetUser.spent = Math.max(0, targetUser.spent - ord.costUSD);
-                    if (userOrder) {
-                        userOrder.status = 'Rejected';
-                    }
-                    showToast(`❌ Order rejected. Refunded $${ord.costUSD.toFixed(4)} USD to ${ord.username}`);
-                }
-            }
-
-            adminPendingOrders.splice(idx, 1);
-            updateUI();
-            updateAdminPanel();
-        }
-    </script>
-</body>rgetUser.orders.find(o => o.id === ord.id);
-
-                if (approved) {
-                    if (userOrder) {
-                        userOrder.status = 'Completed';
-                    }
-                    showToast(`✅ Order ${ord.id} completed`);
-                } else {
-                    targetUser.balance += ord.costUSD;
-                    targetUser.spent = Math.max(0, targetUser.spent - ord.costUSD);
-                    if (userOrder) {
-                        userOrder.status = 'Rejected';
-                    }
-                    showToast(`❌ Order rejected. Refunded $${ord.costUSD.toFixed(4)} USD to ${ord.username}`);
-                }
-            }
-
-            adminPendingOrders.splice(idx, 1);
-            updateUI();
-            updateAdminPanel();
-        }
-    </script>
+    // Bootstrapping operations
+    window.onload = () => {
+      // Theme matching
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        document.getElementById('theme-icon').className = "fa-solid fa-sun text-lg";
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.getElementById('theme-icon').className = "fa-solid fa-moon text-lg";
+      }
+    };
+  </script>
 </body>
 </html>
