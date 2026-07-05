@@ -95,7 +95,7 @@
           <div class="flex items-start gap-3.5">
             <span class="bg-white/10 p-2 rounded-xl text-blue-400"><i class="fa-solid fa-bolt text-sm"></i></span>
             <div>
-              <h4 class="text-sm font-bold text-white font-sans">Instant Order Delivery</h4>
+              <h4 class="text-sm font-bold text-white">Instant Delivery</h4>
               <p class="text-xs text-slate-400 mt-0.5">আমাদের সার্ভিসগুলো অর্ডার করার সাথে সাথেই কাজ শুরু করে দেয়।</p>
             </div>
           </div>
@@ -378,7 +378,7 @@
           </div>
 
           <!-- Categories, Central Services & Right Leaderboard -->
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
             
             <!-- Left Side Categories (Span 2) -->
             <div class="lg:col-span-2 bg-white dark:bg-[#0E1527]/90 rounded-2xl p-4 border border-slate-150 dark:border-slate-800/40 shadow-sm h-fit backdrop-blur-md">
@@ -578,7 +578,7 @@
           </div>
         </div>
 
-        <!-- VIEW: Add Funds -->
+        <!-- VIEW: Add Funds (NO AUTO ADD / MANUAL CHECKOUT ONLY) -->
         <div id="view-add-funds" class="hidden space-y-6">
           <div>
             <h2 class="text-xl md:text-2xl font-black tracking-tight flex items-center gap-2"><i class="fa-solid fa-wallet text-blue-500"></i> Payment Gateway</h2>
@@ -626,7 +626,7 @@
             </div>
 
             <!-- Right Side: Clean submission Form -->
-            <div class="lg:col-span-6 bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm space-y-4 backdrop-blur-md">
+            <div class="lg:col-span-6 bg-white dark:bg-[#0E1527]/90 p-6 rounded-3xl border border-slate-150 dark:border-slate-800/40 shadow-sm space-y-4 backdrop-blur-md font-sans">
               <h3 class="text-sm font-extrabold text-slate-800 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-2"><i class="fa-solid fa-receipt text-blue-500"></i> Submit Deposit Information</h3>
               
               <form id="deposit-submit-form" onsubmit="handleTransactionSubmit(event)" class="space-y-4">
@@ -695,11 +695,12 @@
                     <th class="py-3 px-4">Sender Number</th>
                     <th class="py-3 px-4">Amount (BDT)</th>
                     <th class="py-3 px-4">Status</th>
+                    <th class="py-3 px-4 text-center">Action</th>
                   </tr>
                 </thead>
                 <tbody id="deposit-logs-body" class="divide-y divide-slate-100 dark:divide-slate-800/40">
                   <tr id="empty-deposits-row">
-                    <td colspan="5" class="py-6 text-center text-slate-400 font-medium">No deposit history found.</td>
+                    <td colspan="6" class="py-6 text-center text-slate-400 font-medium">No deposit history found.</td>
                   </tr>
                 </tbody>
               </table>
@@ -745,7 +746,7 @@
                     <p class="text-[10px] text-slate-400 mt-0.5">যেকোনো জরুরী প্রয়োজনে সরাসরি হোয়াটসঅ্যাপ মেসেজ দিন।</p>
                   </div>
                 </div>
-                <a href="https://wa.me/8801860909272" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-md">
+                <a href="https://wa.me/8801860909272" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-md font-sans">
                   Message <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
                 </a>
               </div>
@@ -783,7 +784,7 @@
             <select id="modal-service" onchange="updateServiceDetails()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-xs font-medium outline-none focus:ring-2 focus:ring-blue-500"></select>
           </div>
           
-          <!-- Premium Cost Breakdown with Gamified verified badge discount -->
+          <!-- Premium Cost Breakdown with BDT & verified badge discount -->
           <div class="bg-blue-50/50 dark:bg-blue-950/20 p-4 rounded-2xl text-xs space-y-1.5 border border-blue-100/40 font-sans">
             <div class="flex justify-between">
               <span class="text-slate-400 font-semibold">Rate per 1000:</span>
@@ -797,7 +798,6 @@
               <span class="text-slate-400 font-semibold flex items-center gap-1">
                 <i class="fa-solid fa-gift text-blue-500"></i> Blue Badge Discount:
               </span>
-              <!-- Dynamically locked or unlocked -->
               <span id="modal-discount-tag" class="font-black text-rose-500">-৳0.00</span>
             </div>
             <div class="border-t border-slate-150 dark:border-slate-800/60 pt-1.5 flex justify-between items-center">
@@ -861,7 +861,7 @@
     // MOCK LEADERBOARD DATA (DYNAMIC)
     let leaderboard = [];
 
-    // RANDOM 100 USERS GENERATOR WITH REALISTIC BANGLADESHI/ENGLISH NAMES
+    // RANDOM 100 USERS GENERATOR
     function generateLeaderboard() {
       const names = [
         'kaisarvai007', 'smm_boss_bd', 'rakib_reseller', 'shakib_99', 'tanvir_smm', 
@@ -874,7 +874,6 @@
 
       let list = [];
 
-      // Generate 99 random users
       for (let i = 0; i < 99; i++) {
         const randomName = names[i % names.length] + '_' + Math.floor(10 + Math.random() * 900);
         const spent = 150 + Math.random() * 45000;
@@ -888,7 +887,6 @@
         });
       }
 
-      // Add Me to the list
       list.push({
         username: '@' + userDetails.username,
         spent: walletState.spent,
@@ -913,7 +911,6 @@
       const container = document.getElementById('leaderboard-container');
       container.innerHTML = '';
 
-      // Slice to top 20 list (As requested)
       const top20 = leaderboard.slice(0, 20);
 
       top20.forEach((user, index) => {
@@ -937,7 +934,7 @@
       });
     }
 
-    // SIMULATED BACKGROUND ACTIVITY (Other SMM resellers ordering in real-time)
+    // SIMULATED BACKGROUND ACTIVITY
     setInterval(() => {
       if (leaderboard.length === 0) return;
 
@@ -1090,7 +1087,7 @@
       renderTable();
     }
 
-    // GOOGLE LOGIN PROCESS (FIXED SYNTAX TYPOS)
+    // GOOGLE LOGIN PROCESS (FULLY WORKING SIMULATION)
     function handleGoogleLogin() {
       const googlePopup = document.getElementById('google-loading-popup');
       googlePopup.classList.remove('hidden');
@@ -1193,7 +1190,7 @@
       `;
       container.prepend(ticketDiv);
 
-      showToast('Support ticket #' + ticketId + ' created successfully!');
+      showToast(`Support ticket #${ticketId} created successfully!`);
       document.getElementById('ticket-subject').value = '';
       document.getElementById('ticket-msg').value = '';
     }
@@ -1208,7 +1205,7 @@
       }
     }
 
-    // ADD FUNDS SUBMISSION WITH INTERACTIVE SIMULATED PENDING SYSTEM
+    // ADD FUNDS SUBMISSION WITH INTERACTIVE SIMULATED PENDING SYSTEM (No Auto-Add)
     function handleTransactionSubmit(event) {
       event.preventDefault();
       
@@ -1241,7 +1238,7 @@
           <td class="py-4 px-4" id="tx-status-cell-${txId}">
             <div class="flex items-center gap-2">
               <span class="bg-amber-100 text-amber-600 px-2 py-1 rounded-full font-bold text-[10px] animate-pulse">Pending</span>
-              <button onclick="approveDeposit('${txId}', ${amount})" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[9px] font-black px-2.5 py-1 rounded-lg transition-all shadow-sm flex items-center gap-0.5">
+              <button onclick="approveDeposit('${txId}', ${amount})" class="bg-[#3B82F6] hover:bg-blue-700 text-white text-[9px] font-black px-2.5 py-1 rounded-lg transition-all shadow-sm flex items-center gap-0.5">
                 <i class="fa-solid fa-check"></i> Approve
               </button>
             </div>
@@ -1254,7 +1251,7 @@
         btnText.classList.remove('hidden');
         spinner.classList.add('hidden');
 
-        showToast('৳' + amount.toFixed(2) + ' BDT পেমেন্ট রিকোয়েস্ট পেন্ডিং! আপনি নিচে ম্যানুয়ালি "Approve" বাটনে ক্লিক না করা পর্যন্ত এটি পেন্ডিং থাকবে।');
+        showToast(`৳${amount.toFixed(2)} BDT পেমেন্ট রিকোয়েস্ট পেন্ডিং! আপনি নিচে ম্যানুয়ালি "Approve" বাটনে ক্লিক না করা পর্যন্ত এটি পেন্ডিং থাকবে।`);
         
         // Reset input fields
         document.getElementById('tx-sender').value = '';
@@ -1264,7 +1261,7 @@
       }, 1000);
     }
 
-    // MANUAL APPROVE DEPOSIT ACTION
+    // MANUAL APPROVE DEPOSIT ACTION (Will not approve until user clicks)
     function approveDeposit(txId, amount) {
       const statusCell = document.getElementById(`tx-status-cell-${txId}`);
       if (statusCell) {
@@ -1274,7 +1271,7 @@
         walletState.balance += amount;
         updateStatsUI();
         
-        showToast('৳' + amount.toFixed(2) + ' BDT পেমেন্ট সফলভাবে অ্যাপ্রুভ করা হয়েছে এবং মেইন ব্যালেন্সে যোগ হয়েছে!');
+        showToast(`৳${amount.toFixed(2)} BDT পেমেন্ট সফলভাবে অ্যাপ্রুভ করা হয়েছে এবং মেইন ব্যালেন্সে যোগ হয়েছে!`);
       }
     }
 
@@ -1324,6 +1321,7 @@
       }
     }
 
+    // FIXED SUB-TOTALS & DETAILED CALCULATOR (Grounded BDT Mathematics)
     function calculateCost() {
       const srvId = parseInt(document.getElementById('modal-service').value);
       const srv = services.find(s => s.id === srvId);
@@ -1407,38 +1405,13 @@
       `;
       orderBody.prepend(newRow);
 
-      showToast('অর্ডার সফলভাবে সম্পন্ন হয়েছে! ID: #' + orderId + ' (মূল্য: ৳' + finalCost.toFixed(2) + ')');
+      showToast(`অর্ডার সফলভাবে সম্পন্ন হয়েছে! ID: #${orderId} (मूल্য: ৳${finalCost.toFixed(2)})`);
       
       document.getElementById('modal-link').value = '';
       document.getElementById('modal-quantity').value = '';
       document.getElementById('modal-cost').value = '0.00';
       
       closeOrderModal();
-    }
-
-    function copyNumber(number) {
-      navigator.clipboard.writeText(number).then(() => {
-        showToast(`Number ${number} Copied!`);
-      });
-    }
-
-    function toggleMobileSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('-translate-x-full');
-    }
-
-    function toggleTheme() {
-      const html = document.documentElement;
-      const themeIcon = document.getElementById('theme-icon');
-      if(html.classList.contains('dark')) {
-        html.classList.remove('dark');
-        themeIcon.className = "fa-solid fa-moon text-lg";
-        showToast('Light Mode ☀️');
-      } else {
-        html.classList.add('dark');
-        themeIcon.className = "fa-solid fa-sun text-lg";
-        showToast('Dark Mode 🌙');
-      }
     }
 
     window.onload = () => {
